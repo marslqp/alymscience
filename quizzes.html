@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль | AlymChems</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:"Poppins",sans-serif;background:radial-gradient(circle at top,#0f172a,#020617);color:white;min-height:100vh;padding:30px 20px;}
+        .back{color:#38bdf8;text-decoration:none;font-weight:600;font-size:14px;}
+        .wrap{max-width:720px;margin:20px auto;}
+        .card{background:rgba(255,255,255,0.05);border-radius:24px;padding:30px;border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(15px);margin-bottom:20px;}
+        .avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#38bdf8);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;margin:0 auto 16px;box-shadow:0 0 30px rgba(56,189,248,0.4);}
+        .uname{font-size:26px;font-weight:800;text-align:center;}
+        .badge-grade{display:block;background:rgba(37,99,235,0.3);border:1px solid #2563eb;padding:4px 16px;border-radius:20px;color:#93c5fd;font-size:13px;width:fit-content;margin:8px auto 4px;}
+        .joined{text-align:center;color:#475569;font-size:12px;}
+        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+        @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr);}}
+        .sbox{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;text-align:center;}
+        .snum{font-size:28px;font-weight:800;color:#38bdf8;}
+        .snum.gold{color:#fbbf24;}
+        .slbl{font-size:11px;color:#475569;margin-top:4px;}
+
+        /* РЕЙТИНГ ПЕРЕКЛЮЧАТЕЛЬ */
+        .lb-tabs{display:flex;gap:8px;margin-bottom:16px;}
+        .lb-tab{padding:8px 18px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#64748b;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;transition:0.3s;}
+        .lb-tab.active{background:#2563eb;color:white;border-color:#2563eb;}
+        .lb-wrap{background:rgba(255,255,255,0.03);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
+        .lb-hdr{background:rgba(37,99,235,0.2);padding:10px 18px;display:grid;grid-template-columns:40px 1fr 80px;font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+        .lb-row{padding:12px 18px;display:grid;grid-template-columns:40px 1fr 80px;align-items:center;border-top:1px solid rgba(255,255,255,0.04);transition:0.2s;}
+        .lb-row:hover{background:rgba(255,255,255,0.03);}
+        .lb-row.me{background:rgba(37,99,235,0.15);border-left:3px solid #2563eb;}
+        .lb-rank{font-size:16px;font-weight:800;}
+        .lb-score{color:#38bdf8;font-weight:800;font-size:14px;}
+        .r1{color:#fbbf24;} .r2{color:#9ca3af;} .r3{color:#cd7c3c;}
+
+        .section-ttl{font-size:15px;font-weight:700;color:#94a3b8;margin-bottom:14px;}
+        .badges{display:flex;flex-wrap:wrap;gap:10px;}
+        .bdg{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:13px;}
+        .bdg.earned{border-color:#38bdf8;background:rgba(56,189,248,0.08);}
+        .bdg.earned .bname{color:#38bdf8;}
+        .bname{font-weight:700;}
+        .bdesc{font-size:11px;color:#475569;}
+        .hist-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px;}
+        .hist-pts{color:#4ade80;font-weight:700;font-size:13px;}
+        .hist-name{color:#cbd5e1;}
+        .logout{width:100%;padding:13px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:12px;color:#f87171;font-size:15px;font-weight:700;cursor:pointer;transition:0.3s;font-family:inherit;}
+        .logout:hover{background:rgba(239,68,68,0.25);}
+        .nologin{text-align:center;padding:80px 20px;}
+        .nologin h2{color:#38bdf8;margin-bottom:16px;}
+        .nologin a{display:inline-block;padding:12px 28px;background:#2563eb;border-radius:10px;color:white;text-decoration:none;font-weight:700;}
+        .loading{text-align:center;padding:40px;color:#475569;}
+    </style>
+</head>
+<body>
+<div style="position:fixed;top:0;left:0;right:0;padding:10px 20px;background:rgba(2,6,23,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;z-index:100;">
+  <a href="index.html" style="color:#38bdf8;text-decoration:none;font-weight:700;font-size:14px;background:rgba(56,189,248,0.1);padding:6px 14px;border-radius:8px;border:1px solid rgba(56,189,248,0.2);" id="pr-home">← На главную</a>
+  <div style="display:flex;gap:6px;">
+    <button onclick="prSetLang('ru')" id="pr-btn-ru" style="background:none;border:2px solid #38bdf8;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:#38bdf8;letter-spacing:0.5px;">RU</button>
+    <button onclick="prSetLang('en')" id="pr-btn-en" style="background:none;border:2px solid transparent;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:#94a3b8;letter-spacing:0.5px;">ENG</button>
+  </div>
+</div>
+<div class="wrap" style="padding-top:60px;">
+    <div id="root" style="margin-top:20px;"></div>
+</div>
+<script>
+const BADGES = [
+    {icon:"🔬",name:"First Steps",desc:"Первые очки",req:1},
+    {icon:"⚗️",name:"Lab Rat",desc:"50 очков",req:50},
+    {icon:"🧪",name:"Chemist",desc:"100 очков",req:100},
+    {icon:"🏆",name:"Champion",desc:"200 очков",req:200},
+    {icon:"💎",name:"Diamond",desc:"500 очков",req:500},
+    {icon:"🌟",name:"Legend",desc:"1000 очков",req:1000},
+];
+
+// Красивые названия активностей
+const ACT_NAMES = {
+    'game_elements':   '🔤 Symbol Master — Символы элементов',
+    'game_reactor':    '⚗️ Reaction Lab — Реактор',
+    'game_assembly':   '🧬 Molecule Builder — Молекулы',
+    'game_catcher':    '🎯 Element Catcher — Ловушка',
+    'game_ptable':     '📊 Periodic Quiz — Таблица Менделеева',
+    'game_external_challenge': '🌐 PhET Atom Builder — Вызов',
+    'quiz_7_Introduction to Chemistry':      '📗 Тест 7кл: Введение в химию',
+    'quiz_7_Physical vs Chemical Changes':   '📗 Тест 7кл: Физ/хим изменения',
+    'quiz_8_Acids and Bases':                '📘 Тест 8кл: Кислоты и основания',
+    'quiz_8_Chemical Reactions':             '📘 Тест 8кл: Химические реакции',
+    'quiz_9_Organic Chemistry':              '📙 Тест 9кл: Органическая химия',
+    'quiz_9_Electrochemistry':               '📙 Тест 9кл: Электрохимия',
+};
+
+function getActName(key) {
+    // Убираем _0, _1, _2 и т.д. с конца для поиска базового названия
+    const base = key.replace(/_\d+$/, '');
+    return ACT_NAMES[base] || ACT_NAMES[key] || key;
+}
+
+let lbMode = 'school'; // 'school' или 'class'
+let globalData = null;
+
+async function init() {
+    const root = document.getElementById('root');
+    const raw = localStorage.getItem('currentUser');
+    const t = PR_T[prLang];
+    if (!raw) {
+        root.innerHTML = `<div class="nologin"><h2>${t.noLoginH}</h2><p style="color:#475569;margin-bottom:20px;">${t.noLoginP}</p><a href="login.html">${t.noLoginBtn}</a></div>`;
+        return;
+    }
+    const user = JSON.parse(raw);
+    root.innerHTML = `<div class="loading">${PR_T[prLang].loading}</div>`;
+
+    let serverScore = user.score || 0;
+    let rank = '—', rankClass = '—', grade = user.grade || '?';
+    let completed = [];
+
+    try {
+        const r = await fetch(`scores_api.php?action=user_data&user=${encodeURIComponent(user.name)}`);
+        const d = await r.json();
+        if (!d.error) {
+            serverScore = d.total_score;
+            rank = d.rank;
+            rankClass = d.rank_class;
+            grade = d.grade || grade;
+            completed = d.completed || [];
+            user.score = serverScore;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        }
+    } catch(e) {}
+
+    globalData = { user, serverScore, rank, rankClass, grade, completed };
+    render();
+}
+
+function render() {
+    const { user, serverScore, rank, rankClass, grade, completed } = globalData;
+    const t = PR_T[prLang];
+    const initial = user.name[0].toUpperCase();
+    const badges = BADGES.map(b => ({...b, earned: serverScore >= b.req}));
+    const earnedCount = badges.filter(b=>b.earned).length;
+    const locale = prLang === 'ru' ? 'ru-RU' : 'en-GB';
+    const joinedDate = user.joined || new Date().toLocaleDateString(locale);
+
+    const histHTML = completed.length
+        ? completed.map(item => {
+            const key = item.key || item;
+            const pts = item.points || '';
+            return `<div class="hist-item">
+                <span class="hist-name">${getActName(key)}</span>
+                ${pts ? `<span class="hist-pts">+${pts} pts</span>` : '<span class="hist-pts">✓</span>'}
+            </div>`;
+          }).join('')
+        : `<p style="color:#475569;font-size:13px;">${t.noHistory}</p>`;
+
+    document.getElementById('root').innerHTML = `
+    <div class="card" style="text-align:center;">
+        <div class="avatar">${initial}</div>
+        <div class="uname">${user.name}</div>
+        <div class="badge-grade">📚 ${t.grade} ${grade}</div>
+        <div class="joined">${t.member} ${joinedDate}</div>
+    </div>
+
+    <div class="stats">
+        <div class="sbox"><div class="snum">${serverScore}</div><div class="slbl">${t.pts}</div></div>
+        <div class="sbox"><div class="snum gold">#${rank}</div><div class="slbl">${t.rankSchool}</div></div>
+        <div class="sbox"><div class="snum gold">#${rankClass}</div><div class="slbl">${t.rankClass}</div></div>
+        <div class="sbox"><div class="snum">${earnedCount}/${BADGES.length}</div><div class="slbl">${t.badges}</div></div>
+    </div>
+
+    <div class="card">
+        <div class="section-ttl">${t.achievements}</div>
+        <div class="badges">
+            ${badges.map(b=>`
+            <div class="bdg ${b.earned?'earned':''}">
+                <span style="font-size:22px;">${b.icon}</span>
+                <div>
+                    <div class="bname">${b.name}</div>
+                    <div class="bdesc">${b.desc}${b.earned?' ✓':' — '+b.req+' pts'}</div>
+                </div>
+            </div>`).join('')}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="section-ttl">${t.leaderboard}</div>
+        <div class="lb-tabs">
+            <button class="lb-tab active" id="tab-school" onclick="switchLB('school')">${t.tabSchool}</button>
+            <button class="lb-tab" id="tab-class" onclick="switchLB('class')">${t.tabClass} (${grade})</button>
+        </div>
+        <div id="lb-container"><div style="color:#475569;font-size:13px;">${t.loadingLb}</div></div>
+    </div>
+
+    <div class="card">
+        <div class="section-ttl">${t.history}</div>
+        ${histHTML}
+    </div>
+
+    <button class="logout" onclick="logout()">${t.logout}</button>
+    `;
+
+    loadLB('school');
+}
+
+async function switchLB(mode) {
+    lbMode = mode;
+    document.getElementById('tab-school').classList.toggle('active', mode==='school');
+    document.getElementById('tab-class').classList.toggle('active', mode==='class');
+    loadLB(mode);
+}
+
+async function loadLB(mode) {
+    const container = document.getElementById('lb-container');
+    if (!container) return;
+    container.innerHTML = '<div style="color:#475569;font-size:13px;padding:10px;">' + PR_T[prLang].loadingLb + '</div>';
+
+    const { user, grade } = globalData;
+    const url = mode === 'class'
+        ? `scores_api.php?action=leaderboard_class&grade=${encodeURIComponent(grade)}`
+        : `scores_api.php?action=leaderboard`;
+
+    try {
+        const r = await fetch(url);
+        const rows = await r.json();
+        if (!rows.length) {
+            container.innerHTML = '<p style="color:#475569;font-size:13px;padding:10px;">Пока нет данных.</p>';
+            return;
+        }
+        const icons = ['🥇','🥈','🥉'];
+        const cls   = ['r1','r2','r3'];
+        container.innerHTML = `
+        <div class="lb-wrap">
+            <div class="lb-hdr"><span>#</span><span>Ученик</span><span>Очки</span></div>
+            ${rows.map((u,i) => {
+                const isMe = u.fullname === user.name;
+                return `<div class="lb-row ${isMe?'me':''}">
+                    <span class="lb-rank ${cls[i]||''}">${icons[i] || (i+1)}</span>
+                    <span style="font-weight:${isMe?'800':'600'};color:${isMe?'#38bdf8':'white'};">
+                        ${u.fullname}${isMe?' ('+PR_T[prLang].me+')':''} <span style="color:#334155;font-size:11px;">· ${u.grade}</span>
+                    </span>
+                    <span class="lb-score">⭐ ${u.total_score}</span>
+                </div>`;
+            }).join('')}
+        </div>`;
+    } catch(e) {
+        container.innerHTML = '<p style="color:#475569;font-size:13px;">' + PR_T[prLang].lbError + '</p>';
+    }
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'index.html';
+}
+
+// ─── LANGUAGE ────────────────────────────────────────────────────────────────
+let prLang = localStorage.getItem('alymLang') || 'ru';
+
+const PR_T = {
+  ru: {
+    home: '← На главную',
+    loading: 'Загрузка профиля...',
+    noLoginH: 'Ты не вошёл',
+    noLoginP: 'Войди чтобы увидеть профиль',
+    noLoginBtn: 'Войти',
+    grade: 'Класс',
+    member: 'Участник с',
+    pts: 'Очков',
+    rankSchool: 'Рейтинг в школе',
+    rankClass: 'Рейтинг в классе',
+    badges: 'Значков',
+    achievements: '🏅 Достижения',
+    leaderboard: '🏆 Рейтинг',
+    tabSchool: '🌐 Вся школа',
+    tabClass: '🎓 Мой класс',
+    history: '📋 История активностей',
+    noHistory: 'Пока нет активностей. Поиграй в игры или пройди тест!',
+    logout: '🚪 Выйти из аккаунта',
+    loadingLb: 'Загрузка...',
+    lbError: 'Ошибка загрузки.',
+    me: 'ты',
+  },
+  en: {
+    home: '← Home',
+    loading: 'Loading profile...',
+    noLoginH: 'Not logged in',
+    noLoginP: 'Log in to see your profile',
+    noLoginBtn: 'Login',
+    grade: 'Grade',
+    member: 'Member since',
+    pts: 'Points',
+    rankSchool: 'School rank',
+    rankClass: 'Class rank',
+    badges: 'Badges',
+    achievements: '🏅 Achievements',
+    leaderboard: '🏆 Leaderboard',
+    tabSchool: '🌐 Whole school',
+    tabClass: '🎓 My class',
+    history: '📋 Activity history',
+    noHistory: 'No activities yet. Play games or take a test!',
+    logout: '🚪 Log out',
+    loadingLb: 'Loading...',
+    lbError: 'Failed to load.',
+    me: 'you',
+  }
+};
+
+function prSetLang(lang) {
+  prLang = lang;
+  localStorage.setItem('alymLang', lang);
+  const ru = document.getElementById('pr-btn-ru');
+  const en = document.getElementById('pr-btn-en');
+  if(ru) { ru.style.borderColor = lang==='ru'?'#38bdf8':'transparent'; ru.style.color = lang==='ru'?'#38bdf8':'#94a3b8'; }
+  if(en) { en.style.borderColor = lang==='en'?'#38bdf8':'transparent'; en.style.color = lang==='en'?'#38bdf8':'#94a3b8'; }
+  const homeEl = document.getElementById('pr-home');
+  if(homeEl) homeEl.textContent = PR_T[lang].home;
+  // Re-render if data loaded
+  if(globalData) render();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  prSetLang(prLang);
+});
+
+init();
+</script>
+</body>
+</html>

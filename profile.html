@@ -1,0 +1,306 @@
+<?php
+// ─── ЗАЩИТА ПАРОЛЕМ ───────────────────────────────────────────────────────
+$ADMIN_PASSWORD = 'adminsema23'; // СМЕНИ на свой пароль!
+
+session_start();
+if ($_POST['pwd'] ?? '') {
+    if ($_POST['pwd'] === $ADMIN_PASSWORD) {
+        $_SESSION['admin'] = true;
+    } else {
+        $wrongPwd = true;
+    }
+}
+if (!($_SESSION['admin'] ?? false)) { ?>
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:#020617;color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;}
+.box{background:rgba(255,255,255,0.05);padding:40px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);width:340px;text-align:center;}
+h2{color:#38bdf8;margin-bottom:24px;font-size:22px;}
+input{width:100%;padding:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:white;font-size:15px;outline:none;margin-bottom:14px;}
+button{width:100%;padding:12px;background:#2563eb;color:white;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;}
+.err{color:#f87171;font-size:13px;margin-bottom:12px;}
+</style></head><body>
+<div class="box">
+    <h2>🔐 Admin Panel</h2>
+    <?php if($wrongPwd??false) echo '<div class="err">Неверный пароль</div>'; ?>
+    <form method="post">
+        <input type="password" name="pwd" placeholder="Пароль администратора" autofocus>
+        <button type="submit">Войти</button>
+    </form>
+</div>
+</body></html>
+<?php exit; }
+
+// ─── ПОДКЛЮЧЕНИЕ К БД ─────────────────────────────────────────────────────
+require_once 'db.php';
+
+// ─── ДЕЙСТВИЯ ─────────────────────────────────────────────────────────────
+$action = $_GET['action'] ?? 'dashboard';
+
+// Удалить пользователя
+if ($action === 'delete_user' && isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+    $conn->prepare("DELETE FROM users WHERE id=?")->bind_param('i',$id) ;
+    $stmt = $conn->prepare("DELETE FROM users WHERE id=?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    header('Location: admin.php');
+    exit;
+}
+
+// Сбросить очки пользователя
+if ($action === 'reset_score' && isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+    $stmt = $conn->prepare("UPDATE users SET total_score=0 WHERE id=?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $stmt2 = $conn->prepare("DELETE FROM scores WHERE user_id=?");
+    $stmt2->bind_param('i', $id);
+    $stmt2->execute();
+    header('Location: admin.php');
+    exit;
+}
+
+// ─── ДАННЫЕ ───────────────────────────────────────────────────────────────
+// Все пользователи с последней активностью
+$users = $conn->query("
+    SELECT 
+        u.id,
+        u.fullname,
+        u.grade,
+        u.total_score,
+        u.joined_at,
+        (SELECT activity_key FROM scores WHERE user_id = u.id ORDER BY earned_at DESC LIMIT 1) as last_activity,
+        (SELECT earned_at   FROM scores WHERE user_id = u.id ORDER BY earned_at DESC LIMIT 1) as last_active,
+        (SELECT COUNT(*)    FROM scores WHERE user_id = u.id) as activity_count
+    FROM users u
+    ORDER BY u.total_score DESC
+");
+
+// Статистика
+$stats = $conn->query("SELECT COUNT(*) as total_users, SUM(total_score) as total_pts, COUNT(DISTINCT grade) as total_grades FROM users")->fetch_assoc();
+$totalScores = $conn->query("SELECT COUNT(*) as c FROM scores")->fetch_assoc()['c'];
+
+// Красивые названия активностей
+function actName($key) {
+    $map = [
+        'game_elements'   => '🔤 Symbol Master',
+        'game_reactor'    => '⚗️ Reaction Lab',
+        'game_assembly'   => '🧬 Molecule Builder',
+        'game_catcher'    => '🎯 Element Catcher',
+        'game_ptable'     => '📊 Periodic Quiz',
+        'game_external_challenge' => '🌐 PhET Builder',
+        'quiz_7_Introduction to Chemistry'    => '📗 Тест 7кл: Введение',
+        'quiz_7_Physical vs Chemical Changes' => '📗 Тест 7кл: Физ/хим',
+        'quiz_8_Acids and Bases'              => '📘 Тест 8кл: Кислоты',
+        'quiz_8_Chemical Reactions'           => '📘 Тест 8кл: Реакции',
+        'quiz_9_Organic Chemistry'            => '📙 Тест 9кл: Органика',
+        'quiz_9_Electrochemistry'             => '📙 Тест 9кл: Электрохим',
+    ];
+    $base = preg_replace('/_\d+$/', '', $key);
+    return $map[$base] ?? $map[$key] ?? $key;
+}
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Admin | AlymChems</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#020617;color:white;min-height:100vh;padding:30px 20px;}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:14px;}
+h1{font-size:26px;font-weight:800;color:#38bdf8;}
+.logout-a{color:#f87171;text-decoration:none;font-size:13px;font-weight:600;border:1px solid rgba(239,68,68,0.3);padding:7px 16px;border-radius:8px;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:30px;}
+.sbox{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px;text-align:center;}
+.snum{font-size:34px;font-weight:800;color:#38bdf8;}
+.slbl{font-size:12px;color:#475569;margin-top:4px;}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+.filter-bar input,.filter-bar select{padding:9px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:white;font-size:13px;outline:none;font-family:inherit;}
+.filter-bar select option{background:#1e293b;}
+
+/* TABLE */
+.tbl-wrap{background:rgba(255,255,255,0.03);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:800px;}
+thead tr{background:linear-gradient(135deg,rgba(37,99,235,0.3),rgba(56,189,248,0.15));}
+th{padding:14px 16px;text-align:left;font-size:12px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
+td{padding:13px 16px;border-top:1px solid rgba(255,255,255,0.04);font-size:14px;vertical-align:middle;}
+tr:hover td{background:rgba(255,255,255,0.03);}
+.rank-num{font-weight:800;color:#38bdf8;font-size:16px;}
+.name-cell{font-weight:700;}
+.grade-pill{background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.4);padding:3px 10px;border-radius:20px;font-size:12px;color:#93c5fd;white-space:nowrap;}
+.score-val{color:#4ade80;font-weight:800;font-size:16px;}
+.last-act{color:#94a3b8;font-size:12px;max-width:180px;}
+.last-time{color:#475569;font-size:11px;white-space:nowrap;}
+.joined-time{color:#334155;font-size:11px;white-space:nowrap;}
+.acts-count{color:#f59e0b;font-weight:700;}
+.actions{display:flex;gap:6px;}
+.btn-sm{padding:5px 12px;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit;text-decoration:none;display:inline-block;}
+.btn-view{background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.3);}
+.btn-reset{background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);}
+.btn-del{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);}
+.no-data{text-align:center;padding:40px;color:#334155;}
+.r1{color:#fbbf24;} .r2{color:#9ca3af;} .r3{color:#cd7c3c;}
+
+/* MODAL */
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;justify-content:center;align-items:center;padding:20px;}
+.modal.open{display:flex;}
+.modal-box{background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:30px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;}
+.modal-box h3{color:#38bdf8;margin-bottom:16px;font-size:18px;}
+.modal-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;}
+.modal-item:last-child{border:none;}
+.close-modal{float:right;background:none;border:none;color:#f87171;cursor:pointer;font-size:20px;font-weight:800;}
+</style>
+</head>
+<body>
+
+<div class="top">
+    <h1>⚗️ AlymChems Admin</h1>
+    <a href="admin.php?logout=1" class="logout-a" onclick="<?php session_destroy(); ?>">Выйти</a>
+</div>
+
+<?php if(isset($_GET['logout'])){session_destroy();header('Location: admin.php');exit;} ?>
+
+<!-- STATS -->
+<div class="stats-row">
+    <div class="sbox"><div class="snum"><?= $stats['total_users'] ?></div><div class="slbl">Учеников</div></div>
+    <div class="sbox"><div class="snum"><?= $stats['total_pts'] ?? 0 ?></div><div class="slbl">Всего очков</div></div>
+    <div class="sbox"><div class="snum"><?= $totalScores ?></div><div class="slbl">Активностей</div></div>
+    <div class="sbox"><div class="snum"><?= $stats['total_grades'] ?></div><div class="slbl">Классов</div></div>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+    <input type="text" id="search" placeholder="🔍 Поиск по имени..." oninput="filterTable()">
+    <select id="grade-filter" onchange="filterTable()">
+        <option value="">Все классы</option>
+        <?php
+        $grades = $conn->query("SELECT DISTINCT grade FROM users ORDER BY grade");
+        while($g = $grades->fetch_assoc()) echo "<option value='{$g['grade']}'>{$g['grade']}</option>";
+        ?>
+    </select>
+</div>
+
+<!-- TABLE -->
+<div class="tbl-wrap">
+<table id="users-table">
+<thead>
+<tr>
+    <th>#</th>
+    <th>Ученик</th>
+    <th>Класс</th>
+    <th>Очки</th>
+    <th>Последняя игра</th>
+    <th>Последний вход</th>
+    <th>Активностей</th>
+    <th>Регистрация</th>
+    <th>Действия</th>
+</tr>
+</thead>
+<tbody>
+<?php
+$rank = 1;
+$rankClass = ['r1','r2','r3'];
+while ($u = $users->fetch_assoc()):
+    $rankStr = $rank <= 3 ? ['🥇','🥈','🥉'][$rank-1] : $rank;
+    $lastAct = $u['last_activity'] ? actName($u['last_activity']) : '—';
+    $lastTime = $u['last_active'] ? date('d.m.Y H:i', strtotime($u['last_active'])) : '—';
+    $joinedAt = $u['joined_at'] ? date('d.m.Y', strtotime($u['joined_at'])) : '—';
+?>
+<tr data-name="<?= htmlspecialchars(strtolower($u['fullname'])) ?>" data-grade="<?= htmlspecialchars($u['grade']) ?>">
+    <td class="rank-num <?= $rankClass[$rank-1] ?? '' ?>"><?= $rankStr ?></td>
+    <td class="name-cell"><?= htmlspecialchars($u['fullname']) ?></td>
+    <td><span class="grade-pill"><?= htmlspecialchars($u['grade']) ?></span></td>
+    <td class="score-val">⭐ <?= $u['total_score'] ?></td>
+    <td class="last-act"><?= htmlspecialchars($lastAct) ?></td>
+    <td class="last-time"><?= $lastTime ?></td>
+    <td class="acts-count"><?= $u['activity_count'] ?></td>
+    <td class="joined-time"><?= $joinedAt ?></td>
+    <td>
+        <div class="actions">
+            <button class="btn-sm btn-view" onclick="showDetails(<?= $u['id'] ?>, '<?= htmlspecialchars(addslashes($u['fullname'])) ?>')">👁 Детали</button>
+            <a href="admin.php?action=reset_score&id=<?= $u['id'] ?>" class="btn-sm btn-reset" onclick="return confirm('Сбросить очки?')">↺ Сброс</a>
+            <a href="admin.php?action=delete_user&id=<?= $u['id'] ?>" class="btn-sm btn-del" onclick="return confirm('Удалить пользователя?')">🗑</a>
+        </div>
+    </td>
+</tr>
+<?php $rank++; endwhile; ?>
+</tbody>
+</table>
+</div>
+
+<!-- MODAL — детали пользователя -->
+<div class="modal" id="detail-modal">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeModal()">✕</button>
+        <h3 id="modal-title">Детали</h3>
+        <div id="modal-body">Загрузка...</div>
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    const search = document.getElementById('search').value.toLowerCase();
+    const grade  = document.getElementById('grade-filter').value;
+    document.querySelectorAll('#users-table tbody tr').forEach(row => {
+        const name    = row.dataset.name || '';
+        const rowGrade = row.dataset.grade || '';
+        const show = name.includes(search) && (!grade || rowGrade === grade);
+        row.style.display = show ? '' : 'none';
+    });
+}
+
+async function showDetails(userId, userName) {
+    document.getElementById('modal-title').innerText = '👤 ' + userName;
+    document.getElementById('modal-body').innerHTML = 'Загрузка...';
+    document.getElementById('detail-modal').classList.add('open');
+
+    try {
+        const r = await fetch(`scores_api.php?action=user_data&user=${encodeURIComponent(userName)}`);
+        const d = await r.json();
+        const actNames = {
+            'game_elements':'🔤 Symbol Master','game_reactor':'⚗️ Reaction Lab',
+            'game_assembly':'🧬 Molecule Builder','game_catcher':'🎯 Element Catcher',
+            'game_ptable':'📊 Periodic Quiz','game_external_challenge':'🌐 PhET Builder',
+            'quiz_7_Introduction to Chemistry':'📗 Тест 7кл: Введение',
+            'quiz_7_Physical vs Chemical Changes':'📗 Тест 7кл: Физ/хим',
+            'quiz_8_Acids and Bases':'📘 Тест 8кл: Кислоты',
+            'quiz_8_Chemical Reactions':'📘 Тест 8кл: Реакции',
+            'quiz_9_Organic Chemistry':'📙 Тест 9кл: Органика',
+            'quiz_9_Electrochemistry':'📙 Тест 9кл: Электрохим',
+        };
+        function getN(k){const b=k.replace(/_\d+$/,'');return actNames[b]||actNames[k]||k;}
+
+        const items = (d.completed||[]).map(item => {
+            const key = item.key||item;
+            const pts = item.points||'';
+            return `<div class="modal-item"><span>${getN(key)}</span><span style="color:#4ade80;font-weight:700;">${pts?'+'+pts+' pts':'✓'}</span></div>`;
+        }).join('') || '<div style="color:#475569;font-size:13px;">Нет активностей</div>';
+
+        document.getElementById('modal-body').innerHTML = `
+            <div class="modal-item"><span>Всего очков</span><span style="color:#38bdf8;font-weight:800;">⭐ ${d.total_score}</span></div>
+            <div class="modal-item"><span>Рейтинг в школе</span><span style="color:#fbbf24;font-weight:700;">#${d.rank}</span></div>
+            <div class="modal-item"><span>Рейтинг в классе</span><span style="color:#fbbf24;font-weight:700;">#${d.rank_class}</span></div>
+            <div style="margin-top:14px;font-size:12px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Активности:</div>
+            ${items}
+        `;
+    } catch(e) {
+        document.getElementById('modal-body').innerHTML = '<div style="color:#f87171;">Ошибка загрузки</div>';
+    }
+}
+
+function closeModal() {
+    document.getElementById('detail-modal').classList.remove('open');
+}
+document.getElementById('detail-modal').addEventListener('click', function(e) {
+    if(e.target === this) closeModal();
+});
+</script>
+</body>
+</html>

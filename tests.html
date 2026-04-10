@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Tests | AlymChems</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box;}
+        body {
+            font-family: "Poppins", sans-serif;
+            background: radial-gradient(circle at top, #0f172a, #020617);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        h1 { margin-bottom: 30px; font-size: 32px; color: #38bdf8; }
+        .hidden { display: none; }
+
+        /* Buttons Style */
+        .btn {
+            padding: 15px 25px;
+            background: #2563eb;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 200px;
+        }
+        .btn:hover { background: #1d4ed8; transform: translateY(-3px); }
+
+        /* Quiz Box */
+        .question-box { margin-top: 20px; text-align: left; }
+        .options { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .option-btn {
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+        .option-btn:hover { background: rgba(56,189,248,0.2); }
+
+        .score-text { font-size: 24px; font-weight: 600; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div style="position:fixed;top:12px;right:16px;display:flex;gap:6px;z-index:999;">
+  <a href="index.html" style="color:#38bdf8;text-decoration:none;font-weight:700;font-size:13px;padding:5px 12px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);border-radius:8px;" id="qz-home">← Home</a>
+  <button onclick="qzSetLang('ru')" id="qz-btn-ru" style="background:none;border:2px solid transparent;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:#94a3b8;letter-spacing:0.5px;">RU</button>
+  <button onclick="qzSetLang('en')" id="qz-btn-en" style="background:none;border:2px solid #38bdf8;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:#38bdf8;letter-spacing:0.5px;">ENG</button>
+</div>
+
+    <div class="container" id="main-container">
+        <div id="step-grade">
+            <h1>Select Your Grade</h1>
+            <button class="btn" onclick="selectGrade(7)">Grade 7</button>
+            <button class="btn" onclick="selectGrade(8)">Grade 8</button>
+            <button class="btn" onclick="selectGrade(9)">Grade 9</button>
+        </div>
+
+        <div id="step-topic" class="hidden">
+            <h1 id="topic-title">Select Topic</h1>
+            <div id="topic-list"></div>
+            <br>
+            <button onclick="goBack()" style="background:none; border:none; color:#94a3b8; cursor:pointer;">← Back</button>
+        </div>
+
+        <div id="step-quiz" class="hidden">
+            <p id="progress" style="color:#94a3b8; margin-bottom: 10px;">Question 1 of 25</p>
+            <h2 id="question-text">Question text goes here?</h2>
+            <div class="options" id="options-container"></div>
+        </div>
+
+        <div id="step-result" class="hidden">
+            <h1>Test Completed!</h1>
+            <p class="score-text">Your Score: <span id="final-score">0</span> / 25</p>
+            <p id="feedback-msg"></p>
+            <br>
+            <button class="btn" onclick="location.reload()">Try Again</button>
+            <button class="btn" onclick="location.href='index.html'" style="background:#475569;">Home</button>
+        </div>
+    </div>
+
+    <script>
+        let currentGrade = null;
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+
+        // База данных вопросов (пример для 9 класса)
+        const quizData = {
+            9: {
+                "Organic Chemistry": [
+                    { q: "What is the simplest alkane?", a: ["Methane", "Ethane", "Propane"], correct: 0 },
+                    { q: "Which element is the basis of organic chemistry?", a: ["Oxygen", "Nitrogen", "Carbon"], correct: 2 },
+                    // Добавь здесь еще 23 вопроса для полной коллекции
+                ],
+                "Electrochemistry": [
+                    { q: "What device converts chemical energy to electrical?", a: ["Motor", "Battery", "Resistor"], correct: 1 },
+                ]
+            },
+            8: {
+                "Acids and Bases": [
+                    { q: "What is the pH of pure water?", a: ["5", "7", "10"], correct: 1 },
+                ],
+                "Chemical reactions":[
+                    {q: "The substances at the beginning of a chemical reaction are most accurately called:", a:["Products", "Chemicals", "Reactants"], correct: 2},
+                ]
+            }
+        };
+
+        function selectGrade(grade) {
+            currentGrade = grade;
+            document.getElementById('step-grade').classList.add('hidden');
+            document.getElementById('step-topic').classList.remove('hidden');
+            
+            const list = document.getElementById('topic-list');
+            list.innerHTML = "";
+            
+            const topics = quizData[grade] ? Object.keys(quizData[grade]) : [];
+            
+            if (topics.length === 0) {
+                list.innerHTML = "<p>No tests available for this grade yet.</p>";
+            } else {
+                topics.forEach(topic => {
+                    const b = document.createElement('button');
+                    b.className = "btn";
+                    b.innerText = topic;
+                    b.onclick = () => startQuiz(topic);
+                    list.appendChild(b);
+                });
+            }
+        }
+
+        function startQuiz(topic) {
+            currentQuestions = quizData[currentGrade][topic];
+            // ВАЖНО: Если вопросов меньше 25, тест просто пройдет по имеющимся.
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('step-topic').classList.add('hidden');
+            document.getElementById('step-quiz').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById('progress').innerText = `Question ${currentIndex + 1} of ${currentQuestions.length}`;
+            document.getElementById('question-text').innerText = q.q;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = "";
+            
+            q.a.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected) {
+            if (selected === currentQuestions[currentIndex].correct) {
+                score++;
+            }
+            
+            currentIndex++;
+            if (currentIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('step-quiz').classList.add('hidden');
+            document.getElementById('step-result').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+            
+            const msg = document.getElementById('feedback-msg');
+            if (score === currentQuestions.length) msg.innerText = "Excellent! You are a Chemistry Master!";
+            else if (score > currentQuestions.length / 2) msg.innerText = "Good job! Keep studying.";
+            else msg.innerText = "Don't give up! Review the material and try again.";
+        }
+
+        function goBack() {
+            document.getElementById('step-topic').classList.add('hidden');
+            document.getElementById('step-grade').classList.remove('hidden');
+        }
+
+        // ─── LANGUAGE ───────────────────────────────────────────────────────
+        const QZ_T = {
+          ru: {
+            'qz-home':'← Главная',
+            'step-grade-h1':'Выбери свой класс',
+            'step-topic-h1':'Выбери тему',
+            'step-result-h1':'Тест завершён!',
+            'try-again-btn':'Попробовать снова',
+            'home-btn':'Главная',
+            'back-link':'← Назад',
+          },
+          en: {
+            'qz-home':'← Home',
+            'step-grade-h1':'Select Your Grade',
+            'step-topic-h1':'Select Topic',
+            'step-result-h1':'Test Completed!',
+            'try-again-btn':'Try Again',
+            'home-btn':'Home',
+            'back-link':'← Back',
+          }
+        };
+        function qzSetLang(lang) {
+          localStorage.setItem('alymLang', lang);
+          const ru = document.getElementById('qz-btn-ru');
+          const en = document.getElementById('qz-btn-en');
+          ru.style.borderColor = lang==='ru'?'#38bdf8':'transparent';
+          ru.style.color = lang==='ru'?'#38bdf8':'#94a3b8';
+          en.style.borderColor = lang==='en'?'#38bdf8':'transparent';
+          en.style.color = lang==='en'?'#38bdf8':'#94a3b8';
+          const t = QZ_T[lang];
+          document.getElementById('qz-home').textContent = t['qz-home'];
+          // grade step h1
+          const gh = document.querySelector('#step-grade h1');
+          if(gh) gh.textContent = t['step-grade-h1'];
+          const th = document.getElementById('topic-title');
+          if(th) th.textContent = t['step-topic-h1'];
+          const rh = document.querySelector('#step-result h1');
+          if(rh) rh.textContent = t['step-result-h1'];
+          const ta = document.querySelector('#step-result .btn');
+          if(ta) ta.textContent = t['try-again-btn'];
+          const hb = document.querySelectorAll('#step-result .btn')[1];
+          if(hb) hb.textContent = t['home-btn'];
+          const bk = document.querySelector('#step-topic button[onclick="goBack()"]');
+          if(bk) bk.textContent = t['back-link'];
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+          const saved = localStorage.getItem('alymLang') || 'en';
+          qzSetLang(saved);
+        });
+    </script>
+</body>
+</html>

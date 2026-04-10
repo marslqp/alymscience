@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Our Educators | AlymChems</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Poppins",sans-serif;background:radial-gradient(circle at top,#0f172a,#020617);color:white;min-height:100vh;padding:40px 20px;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:14px 50px;background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.06);margin:-40px -20px 40px;border-radius:0;}
+.logo{font-weight:800;font-size:18px;}
+.logo span{color:#38bdf8;}
+.back-link{color:#38bdf8;text-decoration:none;font-size:14px;font-weight:600;}
+.page-title{text-align:center;font-size:42px;font-weight:800;color:#38bdf8;letter-spacing:2px;margin-bottom:8px;}
+.page-sub{text-align:center;color:#94a3b8;margin-bottom:50px;font-size:14px;}
+.teachers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1100px;margin:0 auto;}
+.teacher-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:28px;display:flex;gap:20px;align-items:flex-start;transition:0.3s;}
+.teacher-card:hover{transform:translateY(-6px);border-color:rgba(56,189,248,0.3);background:rgba(255,255,255,0.06);}
+.teacher-card.featured{border-color:rgba(56,189,248,0.4);background:linear-gradient(135deg,rgba(37,99,235,0.1),rgba(56,189,248,0.05));grid-column:1/-1;}
+.t-avatar{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #2563eb;flex-shrink:0;box-shadow:0 0 16px rgba(37,99,235,0.4);}
+.t-avatar-photo{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid #38bdf8;flex-shrink:0;box-shadow:0 0 16px rgba(56,189,248,0.5);}
+.t-info{flex:1;}
+.t-name{font-size:18px;font-weight:800;margin-bottom:4px;}
+.t-role{font-size:12px;color:#38bdf8;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.t-bio{color:#64748b;font-size:13px;line-height:1.7;}
+.t-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.t-badge{background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.4);color:#93c5fd;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+
+/* PHOTO SECTION */
+.photo-section{max-width:1100px;margin:40px auto;background:rgba(255,255,255,0.03);border:1px solid rgba(56,189,248,0.2);border-radius:24px;padding:32px;display:flex;gap:30px;align-items:center;flex-wrap:wrap;}
+.team-photo{border-radius:18px;max-width:480px;width:100%;border:3px solid rgba(56,189,248,0.3);box-shadow:0 0 30px rgba(56,189,248,0.15);}
+.photo-text{flex:1;min-width:240px;}
+.photo-text h2{font-size:24px;font-weight:800;margin-bottom:14px;color:#38bdf8;}
+.photo-text p{color:#64748b;font-size:14px;line-height:1.8;margin-bottom:12px;}
+/* ADMIN SECTION */
+.admin-section {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    perspective: 1000px;
+}
+.teacher-card.featured-admin {
+    background: linear-gradient(145deg, rgba(56, 189, 248, 0.15), rgba(37, 99, 235, 0.05));
+    border: 2px solid rgba(56, 189, 248, 0.4);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    padding: 35px;
+}
+.admin-badge {
+    background: #f59e0b;
+    color: #451a03;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+/* LANG */
+.lang-row{display:flex;gap:8px;justify-content:flex-end;max-width:1100px;margin:0 auto 20px;}
+.lbtn{background:none;border:2px solid transparent;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:#94a3b8;transition:0.2s;letter-spacing:0.5px;}
+.lbtn.active{opacity:1;border-color:#38bdf8;color:#38bdf8;}
+.lbtn:hover{opacity:1;color:white;}
+@media(max-width:700px){.teacher-card{flex-direction:column;align-items:center;text-align:center;} .photo-section{flex-direction:column;align-items:center;} nav{padding:14px 20px;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">⚗️ Alym<span>Chems</span></div>
+  <a href="index.html" class="back-link" id="back-btn">← Главная</a>
+</nav>
+
+<div class="lang-row">
+  <button class="lbtn active" id="lb-ru" onclick="setTLang('ru')">RU</button>
+  <button class="lbtn" id="lb-en" onclick="setTLang('en')">ENG</button>
+</div>
+<!-- ADMINISTRATION / ЗАВУЧ -->
+<div class="admin-section">
+  <div class="teacher-card featured-admin">
+    <img class="t-avatar" style="width: 120px; height: 120px; border-color: #f59e0b;" src="mrtalant_pic.jpg" alt="Academic Director">
+    <div class="t-info">
+      <div class="admin-badge" id="admin-badge-txt">Администрация</div>
+      <div class="t-name" style="font-size: 24px;">Mamatov Talantbek Koshuyevich</div>
+      <div class="t-role" id="admin-role" style="color: #f59e0b;">Завуч по учебной части</div>
+      <div class="t-bio" id="admin-bio" style="font-size: 14px; color: #cbd5e1;">
+        Координирует академические программы лицея и внедрение инновационных методик обучения. Верит, что успех ученика начинается с дисциплины и вдохновения. Магистр педагогических наук с 15-летним стажем управления.
+      </div>
+      <div class="t-badges">
+        <span class="t-badge" style="background:rgba(245,158,11,0.2); border-color:#f59e0b; color:#fbbf24;">🎓 Магистр управления</span>
+        <span class="t-badge" id="admin-b2">🛡️ Академический контроль</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-title" id="page-title">НАШИ УЧИТЕЛЯ</div>
+<div class="page-sub" id="page-sub">Эксперты, вдохновляющие следующее поколение ученых</div>
+
+<!-- FEATURED PHOTO SECTION -->
+<div class="photo-section">
+  <img src="teachers_photo.jpg" class="team-photo" alt="Biology teachers at science board" onerror="this.src='pic_teachers.jpg';this.style.border='3px solid rgba(56,189,248,0.3)';">
+  <div class="photo-text">
+    <h2 id="photo-ttl">🔬 Наши преподаватели в действии</h2>
+    <p id="photo-p1">На фото — наши преподаватели естественных наук рядом с информационным стендом Биологии в рамках Недели науки 2026. Это отражает нашу приверженность практическому и визуальному обучению.</p>
+    <p id="photo-p2">Преподаватели лицея Алымбек Датка сочетают академические знания с реальными экспериментами, вдохновляя учеников на научные открытия каждый день.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+      <span style="background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#4ade80;padding:5px 12px;border-radius:16px;font-size:12px;font-weight:700;" id="pbadge1">🏫 Неделя науки 2026</span>
+      <span style="background:rgba(37,99,235,0.2);border:1px solid #2563eb;color:#93c5fd;padding:5px 12px;border-radius:16px;font-size:12px;font-weight:700;" id="pbadge2">🔬 Биология & Химия</span>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHERS GRID -->
+<div class="teachers-grid" id="teachers-grid">
+
+  <div class="teacher-card">
+    <img class="t-avatar" src="mranton_pic.jpg" alt="Anthony Belay">
+    <div class="t-info">
+      <div class="t-name">Anthony Belay</div>
+      <div class="t-role" id="role1">Учитель химии</div>
+      <div class="t-bio" id="bio1">Эксперт по органической химии с 10+ летним опытом преподавания. «Химия — это не просто предмет, это язык вселенной.» Ведёт лабораторные практикумы и олимпиадную подготовку.</div>
+      <div class="t-badges">
+        <span class="t-badge" id="b1a">🏆 Учитель года</span>
+        <span class="t-badge" id="b1b">⚗️ Органическая химия</span>
+        <span class="t-badge" id="b1c">10+ лет опыта</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="teacher-card">
+    <img class="t-avatar" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200" alt="Elena Petrova">
+    <div class="t-info">
+      <div class="t-name">Asrat Addisu</div>
+      <div class="t-role" id="role2">Учитель биологии</div>
+      <div class="t-bio" id="bio2">Победитель премии «Учитель года». Специалист по аналитической химии и лабораторной безопасности. Разработала уникальную программу по химическому анализу для 10-11 классов.</div>
+      <div class="t-badges">
+        <span class="t-badge" id="b2a">🥇 Лучший учитель</span>
+        <span class="t-badge" id="b2b">🔬 Лабораторная безопасность</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="teacher-card">
+    <img class="t-avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200" alt="Mr. Asrat">
+    <div class="t-info">
+      <div class="t-name">Adnan Shehzad</div>
+      <div class="t-role" id="role3">Учитель биологии</div>
+      <div class="t-bio" id="bio3">Превращает изучение сложнейших биологических процессов в захватывающее исследование жизни. Главный тренер олимпийского резерва. Его методика подготовки позволила воспитанникам взять 12+ наград на республиканском уровне, открыв им двери в лучшие медицинские и биоинженерные вузы.</div>
+      <div class="t-badges">
+        <span class="t-badge" id="b3a">🏅 12+ медалей олимпиад</span>
+        <span class="t-badge" id="b3b">⚡ Биология</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="teacher-card">
+    <img class="t-avatar" src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=200" alt="Sarah Kim">
+    <div class="t-info">
+      <div class="t-name">Ammar Ullah</div>
+      <div class="t-role" id="role4">Углубленная физика</div>
+      <div class="t-bio" id="bio4">Мастерски объясняет законы механики и электричества на простых примерах. Вместе с учениками собрал коллекцию работающих приборов в кабинете. Использует наглядные опыты и цифровые датчики на каждом уроке</div>
+      <div class="t-badges">
+        <span class="t-badge" id="b4a">🧬 Modeling</span>
+        <span class="t-badge" id="b4b">📊 Static</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="teacher-card">
+    <img class="t-avatar" src="https://images.unsplash.com/photo-1548449112-96a38a643324?w=200" alt="Dr. Nurlan">
+    <div class="t-info">
+      <div class="t-name">Dr. Nurlan Akaev</div>
+      <div class="t-role" id="role5">Биохимия & Экология</div>
+      <div class="t-bio" id="bio5">Кандидат химических наук. Преподаёт биохимию и экологическую химию в старших классах. Организует ежегодную научную ярмарку и сотрудничает с университетами Кыргызстана.</div>
+      <div class="t-badges">
+        <span class="t-badge" id="b5a">🎓 Кандидат наук</span>
+        <span class="t-badge" id="b5b">🌿 Экохимия</span>
+        <span class="t-badge" id="b5c">🏫 Наставник</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:40px;">
+  <a href="index.html" style="display:inline-block;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:12px 28px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none;" id="footer-back">← Вернуться на главную</a>
+</div>
+
+<script>
+const TT = {
+  ru: {
+    'back-btn':'← Главная','page-title':'НАШИ УЧИТЕЛЯ','page-sub':'Эксперты, вдохновляющие следующее поколение ученых',
+    'photo-ttl':'🔬 Наши преподаватели в действии',
+    'photo-p1':'На фото — наши преподаватели естественных наук рядом с информационным стендом Биологии в рамках Недели науки 2026. Это отражает нашу приверженность практическому и визуальному обучению.',
+    'photo-p2':'Преподаватели лицея Алымбек Датка сочетают академические знания с реальными экспериментами, вдохновляя учеников на научные открытия каждый день.',
+    'pbadge1':'🏫 Неделя науки 2026','pbadge2':'🔬 Биология & Химия',
+    'role1':'Учитель химии','bio1':'Эксперт по органической химии с 10+ летним опытом преподавания. «Химия — это не просто предмет, это язык вселенной.» Ведёт лабораторные практикумы и олимпиадную подготовку.',
+    'b1a':'🏆 Учитель года','b1b':'⚗️ Органическая химия','b1c':'10+ лет опыта',
+    'role2':'Аналитическая химия','bio2':'Победитель премии «Учитель года». Специалист по аналитической химии и лабораторной безопасности. Разработала уникальную программу по химическому анализу для 10-11 классов.',
+    'b2a':'🥇 Лучший учитель','b2b':'🔬 Лабораторная безопасность',
+    'role3':'Углубленная Биология','bio3':'Превращает изучение сложнейших биологических процессов в захватывающее исследование жизни. Главный тренер олимпийского резерва. Его методика подготовки позволила воспитанникам взять 12+ наград на республиканском уровне, открыв им двери в лучшие медицинские и биоинженерные вузы.',
+    'b3a':'🏅 12+ медалей олимпиад','b3b':'⚡ Углубленная физика',
+    'role4':'Углубленная физика','bio4':'Мастерски объясняет законы механики и электричества на простых примерах. Вместе с учениками собрал коллекцию работающих приборов в кабинете. Использует наглядные опыты и цифровые датчики на каждом уроке.',
+    'b4a':'🧬 Modeling','b4b':'📊 Static',
+    'role5':'Биохимия & Экология','bio5':'Кандидат химических наук. Преподаёт биохимию и экологическую химию в старших классах. Организует ежегодную научную ярмарку.',
+    'b5a':'🎓 Кандидат наук','b5b':'🌿 Экохимия','b5c':'🏫 Наставник',
+    'footer-back':'← Вернуться на главную',
+    'admin-badge-txt': 'Администрация',
+    'admin-role': 'Завуч по учебной части',
+    'admin-bio': 'Координирует академические программы лицея и внедрение инновационных методик обучения. Верит, что успех ученика начинается с дисциплины и вдохновения. Магистр педагогических наук с 15-летним стажем управления.',
+    'admin-b2': '🛡️ Академический контроль',
+    'page-title': 'УЧИТЕЛЯ ТОЧНЫХ НАУК'
+  },
+  en: {
+    'back-btn':'← Home','page-title':'OUR TEACHERS','page-sub':'Experts inspiring the next generation of scientists',
+    'photo-ttl':'🔬 Our Teachers in Action',
+    'photo-p1':'Pictured — our natural science teachers beside the Biology information board during Science Week 2026. This reflects our commitment to hands-on and visual learning.',
+    'photo-p2':'Teachers at Alymbek Datka Lyceum combine academic knowledge with real experiments, inspiring students to make scientific discoveries every day.',
+    'pbadge1':'🏫 Science Week 2026','pbadge2':'🔬 Biology & Chemistry',
+    'role1':'Chemistry Teacher','bio1':'Expert in organic chemistry with 10+ years of teaching experience. "Chemistry isn\'t just a subject, it\'s the language of the universe." Leads lab workshops and olympiad preparation.',
+    'b1a':'🏆 Teacher of the Year','b1b':'⚗️ Organic Chemistry','b1c':'10+ years experience',
+    'role2':'Biology','bio2':'Winner of the "Teacher of the Year" award. Specialist in analytical chemistry and laboratory safety. Developed a unique chemical analysis program for grades 10-11.',
+    'b2a':'🥇 Top Teacher','b2b':'🔬 Laboratory Safety',
+    'role3':'Deep Biology','bio3':'Transforms the study of complex biological processes into a captivating exploration of life. As the head coach of the Olympic reserve, his training methodology has led students to over 12 medals at the national level, opening doors to top medical and bioengineering universities.',
+    'b3a':'🏅 12+ olympiad medals','b3b':'⚡ Deep Biology',
+    'role4':'Deep physics','bio4':'Masterfully explains the laws of mechanics and electricity using simple examples. Built a collection of working physics models with his students. Uses visual experiments and digital sensors in every lesson.',
+    'b4a':'🧬 Molecular Modeling','b4b':'📊 Periodic Table',
+    'role5':'Biochemistry & Ecology','bio5':'PhD in Chemistry. Teaches biochemistry and environmental chemistry in senior grades. Organizes the annual science fair and collaborates with Kyrgyz universities.',
+    'b5a':'🎓 PhD','b5b':'🌿 Eco-Chemistry','b5c':'🏫 Mentor',
+    'footer-back':'← Back to Home',
+    'admin-badge-txt': 'Administration',
+    'admin-role': 'Academic Director',
+    'admin-bio': 'Coordinates academic programs and the implementation of innovative teaching methods. Believes that student success begins with discipline and inspiration. Master of Education with 15 years of management experience.',
+    'admin-b2': '🛡️ Academic Oversight',
+    'page-title': 'SCIENCE TEACHERS'
+  }
+};
+
+let tLang = localStorage.getItem('alymLang') || 'ru';
+function setTLang(lang) {
+  tLang = lang;
+  localStorage.setItem('alymLang', lang);
+  document.getElementById('lb-ru').classList.toggle('active', lang==='ru');
+  document.getElementById('lb-en').classList.toggle('active', lang==='en');
+  const t = TT[lang];
+  for (const [id, val] of Object.entries(t)) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+}
+setTLang(tLang);
+</script>
+</body>
+</html>

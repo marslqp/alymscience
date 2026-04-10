@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login | AlymChems</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Poppins",sans-serif;background:radial-gradient(circle at top,#0f172a,#020617);color:white;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
+.box{background:rgba(255,255,255,0.05);padding:40px;border-radius:24px;backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,0.1);width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.logo{text-align:center;font-size:28px;font-weight:800;margin-bottom:6px;}
+.logo span{color:#38bdf8;}
+.sub{text-align:center;color:#64748b;font-size:13px;margin-bottom:20px;}
+h2{font-size:22px;font-weight:700;margin-bottom:20px;color:#38bdf8;text-align:center;}
+.field{margin-bottom:18px;}
+label{display:block;font-size:13px;color:#94a3b8;margin-bottom:6px;}
+input,select{width:100%;padding:12px 14px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:white;font-size:15px;outline:none;transition:0.3s;font-family:inherit;}
+select option{background:#1e293b;color:white;}
+input:focus,select:focus{border-color:#38bdf8;background:rgba(56,189,248,0.08);}
+.grade-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn{width:100%;padding:13px;background:#2563eb;color:white;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:0.3s;font-family:inherit;margin-top:4px;}
+.btn:hover{background:#1d4ed8;transform:translateY(-1px);}
+.btn:disabled{background:#334155;cursor:not-allowed;transform:none;}
+.err{color:#f87171;font-size:13px;margin-top:8px;text-align:center;min-height:18px;}
+.ok{color:#4ade80;font-size:13px;margin-top:8px;text-align:center;min-height:18px;}
+.toggle{text-align:center;margin-top:20px;font-size:14px;color:#64748b;}
+.toggle a{color:#38bdf8;text-decoration:none;font-weight:600;cursor:pointer;}
+.hint{font-size:11px;color:#475569;margin-top:4px;}
+.preview{text-align:center;font-size:22px;font-weight:800;color:#38bdf8;margin-top:8px;min-height:30px;}
+
+/* ROLE SELECTOR */
+.role-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.role-card{border:2px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:0.25s;background:rgba(255,255,255,0.04);}
+.role-card:hover{border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.07);}
+.role-card.selected-role{border-color:#38bdf8;background:rgba(56,189,248,0.12);box-shadow:0 0 14px rgba(56,189,248,0.2);}
+.role-icon{font-size:30px;margin-bottom:8px;}
+.role-name{font-size:14px;font-weight:700;}
+.role-hint{font-size:11px;color:#475569;margin-top:3px;}
+
+/* TEACHER CODE SECTION */
+.teacher-code-box{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:16px;margin-bottom:16px;}
+.teacher-code-title{color:#fbbf24;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.teacher-code-desc{color:#94a3b8;font-size:12px;line-height:1.5;margin-bottom:10px;}
+
+/* LANG FLAGS */
+.lang-row{display:flex;gap:8px;justify-content:center;margin-bottom:16px;}
+.lbtn{background:none;border:2px solid transparent;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:#94a3b8;transition:0.2s;letter-spacing:0.5px;}
+.lbtn.active{opacity:1;border-color:#38bdf8;color:#38bdf8;}
+.lbtn:hover{opacity:1;color:white;}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="lang-row">
+    <button class="lbtn active" id="lb-ru" onclick="setLoginLang('ru')">RU</button>
+    <button class="lbtn" id="lb-en" onclick="setLoginLang('en')">ENG</button>
+  </div>
+  <div class="logo">⚗️ Alym<span>Chems</span></div>
+  <div class="sub" id="sub-txt">Alymbek Datka Lyceum · Ош</div>
+
+  <!-- LOGIN PANEL -->
+  <div id="login-panel">
+    <h2 id="login-h">Войти в аккаунт</h2>
+    <div class="field">
+      <label id="l-name-lbl">Полное имя</label>
+      <input type="text" id="l-name" placeholder="Иванов Иван" autocomplete="username">
+    </div>
+    <div class="field">
+      <label id="l-pass-lbl">Пароль</label>
+      <input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="err" id="l-err"></div>
+    <button class="btn" id="l-btn" onclick="doLogin()" id="l-btn">Войти</button>
+    <div class="toggle" id="l-toggle">Нет аккаунта? <a onclick="show('signup')" id="l-to-signup">Регистрация</a></div>
+  </div>
+
+  <!-- SIGNUP PANEL -->
+  <div id="signup-panel" style="display:none;">
+    <h2 id="signup-h">Создать аккаунт</h2>
+
+    <!-- ROLE SELECTION -->
+    <div class="field">
+      <label id="role-lbl">Кто ты?</label>
+      <div class="role-row">
+        <div class="role-card selected-role" id="role-student" onclick="selectRole('student')">
+          <div class="role-icon">🎓</div>
+          <div class="role-name" id="role-student-name">Ученик</div>
+          <div class="role-hint" id="role-student-hint">Учусь, прохожу тесты, играю</div>
+        </div>
+        <div class="role-card" id="role-teacher" onclick="selectRole('teacher')">
+          <div class="role-icon">👩‍🏫</div>
+          <div class="role-name" id="role-teacher-name">Учитель</div>
+          <div class="role-hint" id="role-teacher-hint">Слежу за учениками</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEACHER CODE (hidden by default) -->
+    <div class="teacher-code-box" id="teacher-code-box" style="display:none;">
+      <div class="teacher-code-title" id="tcode-title">🔑 Код для учителей</div>
+      <div class="teacher-code-desc" id="tcode-desc">Доступ для учителей ограничен. Введи секретный код, выданный администрацией школы. Ученики не могут получить его без разрешения администратора.</div>
+      <input type="password" id="teacher-code" placeholder="••••••••" autocomplete="off">
+    </div>
+
+    <div class="field">
+      <label id="s-name-lbl">Полное имя</label>
+      <input type="text" id="s-name" placeholder="Иванов Иван">
+      <div class="hint" id="s-name-hint">Запомни точно — оно используется для входа</div>
+    </div>
+
+    <!-- GRADE (student only) -->
+    <div class="field" id="grade-field">
+      <label id="grade-lbl">Класс</label>
+      <div class="grade-row">
+        <select id="s-num" onchange="updatePreview()">
+          <option value="" id="num-placeholder">Номер</option>
+          <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+          <option value="10">10</option><option value="11">11</option>
+        </select>
+        <select id="s-letter" onchange="updatePreview()">
+          <option value="" id="letter-placeholder">Буква</option>
+          <option value="A">A</option><option value="B">B</option><option value="C">C</option>
+          <option value="D">D</option><option value="E1">E1</option><option value="E2">E2</option>
+          <option value="SOC">SOC</option><option value="MED">MED</option>
+        </select>
+      </div>
+      <div class="preview" id="grade-preview"></div>
+    </div>
+
+    <!-- SUBJECT (teacher only) -->
+    <div class="field" id="subject-field" style="display:none;">
+      <label id="subject-lbl">Предмет</label>
+      <select id="s-subject">
+        <option value="chemistry" id="subj-chem">Химия</option>
+        <option value="biology" id="subj-bio">Биология</option>
+        <option value="physics" id="subj-phys">Физика</option>
+        <option value="other" id="subj-other">Другой</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label id="s-pass-lbl">Пароль (мин. 6 символов)</label>
+      <input type="password" id="s-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignup()">
+    </div>
+    <div class="err" id="s-err"></div>
+    <div class="ok" id="s-ok"></div>
+    <button class="btn" id="s-btn" onclick="doSignup()">Создать аккаунт</button>
+    <div class="toggle" id="s-toggle">Уже есть аккаунт? <a onclick="show('login')" id="s-to-login">Войти</a></div>
+  </div>
+</div>
+
+<script>
+// ─── LANGUAGE ─────────────────────────────────────────────────────────────
+const LT = {
+  ru: {
+    'sub-txt':'Лицей Алымбек Датка · Ош', 'login-h':'Войти в аккаунт',
+    'l-name-lbl':'Полное имя','l-pass-lbl':'Пароль','l-btn':'Войти',
+    'l-toggle-text':'Нет аккаунта?', 'l-to-signup':'Регистрация',
+    'signup-h':'Создать аккаунт','role-lbl':'Кто ты?',
+    'role-student-name':'Ученик','role-student-hint':'Учусь, прохожу тесты, играю',
+    'role-teacher-name':'Учитель','role-teacher-hint':'Слежу за учениками',
+    'tcode-title':'🔑 Код для учителей',
+    'tcode-desc':'Доступ для учителей ограничен. Введи секретный код, выданный администрацией школы. Ученики не могут получить его без разрешения администратора.',
+    's-name-lbl':'Полное имя','s-name-hint':'Запомни точно — оно используется для входа',
+    'grade-lbl':'Класс','num-placeholder':'Номер','letter-placeholder':'Буква',
+    'subject-lbl':'Предмет','subj-chem':'Химия','subj-bio':'Биология','subj-phys':'Физика','subj-other':'Другой',
+    's-pass-lbl':'Пароль (мин. 6 символов)','s-btn':'Создать аккаунт',
+    's-to-login':'Войти',
+    'err-fill':'Заполни все поля','err-pass':'Пароль минимум 6 символов',
+    'err-wrong':'Неверное имя или пароль','err-server':'Ошибка сервера. Проверь подключение.',
+    'err-taken':'Это имя уже занято. Войди в аккаунт.',
+    'err-teacher-code':'Неверный код учителя. Обратись к администратору.',
+    'ok-created':'Аккаунт создан! Перенаправление...',
+    'loading':'Загрузка...'
+  },
+  en: {
+    'sub-txt':'Alymbek Datka Lyceum · Osh','login-h':'Sign In',
+    'l-name-lbl':'Full Name','l-pass-lbl':'Password','l-btn':'Sign In',
+    'l-toggle-text':'No account?','l-to-signup':'Register',
+    'signup-h':'Create Account','role-lbl':'Who are you?',
+    'role-student-name':'Student','role-student-hint':'I study, take tests, play',
+    'role-teacher-name':'Teacher','role-teacher-hint':'I monitor students',
+    'tcode-title':'🔑 Teacher Access Code',
+    'tcode-desc':'Teacher access is restricted. Enter the secret code issued by school administration. Students cannot obtain it without administrator permission.',
+    's-name-lbl':'Full Name','s-name-hint':'Remember exactly — it\'s used for login',
+    'grade-lbl':'Grade','num-placeholder':'Number','letter-placeholder':'Letter',
+    'subject-lbl':'Subject','subj-chem':'Chemistry','subj-bio':'Biology','subj-phys':'Physics','subj-other':'Other',
+    's-pass-lbl':'Password (min. 6 chars)','s-btn':'Create Account',
+    's-to-login':'Sign In',
+    'err-fill':'Fill all fields','err-pass':'Password must be at least 6 characters',
+    'err-wrong':'Wrong name or password','err-server':'Server error. Check your connection.',
+    'err-taken':'This name is already taken. Sign in instead.',
+    'err-teacher-code':'Incorrect teacher code. Contact your administrator.',
+    'ok-created':'Account created! Redirecting...',
+    'loading':'Loading...'
+  }
+};
+
+// The teacher code is hashed with a simple check — only admin knows it
+// The actual check is done server-side; this is just a client hint.
+// Code: "Chem2026!" — should be changed by admin, verified server-side
+const TEACHER_CODE_HASH = 'Chem2026!';
+
+let loginLang = localStorage.getItem('alymLang') || 'ru';
+let selectedRole = 'student';
+
+function setLoginLang(lang) {
+  loginLang = lang;
+  localStorage.setItem('alymLang', lang);
+  document.getElementById('lb-ru').classList.toggle('active', lang==='ru');
+  document.getElementById('lb-en').classList.toggle('active', lang==='en');
+  const t = LT[lang];
+  for (const [id, val] of Object.entries(t)) {
+    if (id.startsWith('err-') || id.startsWith('ok-') || id==='loading') continue;
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+}
+
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('role-student').classList.toggle('selected-role', role==='student');
+  document.getElementById('role-teacher').classList.toggle('selected-role', role==='teacher');
+  document.getElementById('grade-field').style.display = role==='student' ? 'block' : 'none';
+  document.getElementById('subject-field').style.display = role==='teacher' ? 'block' : 'none';
+  document.getElementById('teacher-code-box').style.display = role==='teacher' ? 'block' : 'none';
+}
+
+function updatePreview() {
+  const num = document.getElementById('s-num').value;
+  const letter = document.getElementById('s-letter').value;
+  document.getElementById('grade-preview').innerText = (num && letter) ? num+letter : '';
+}
+
+function getGrade() {
+  const n = document.getElementById('s-num').value;
+  const l = document.getElementById('s-letter').value;
+  return (n && l) ? n+l : '';
+}
+
+function show(panel) {
+  document.getElementById('login-panel').style.display = panel==='login' ? 'block' : 'none';
+  document.getElementById('signup-panel').style.display = panel==='signup' ? 'block' : 'none';
+}
+
+function setBtn(id, loading) {
+  const b = document.getElementById(id);
+  b.disabled = loading;
+  b.innerText = loading ? LT[loginLang].loading : LT[loginLang][id==='l-btn'?'l-btn':'s-btn'];
+}
+
+async function doLogin() {
+  const name = document.getElementById('l-name').value.trim();
+  const pass = document.getElementById('l-pass').value;
+  const err = document.getElementById('l-err');
+  err.innerText = '';
+  if (!name || !pass) { err.innerText = LT[loginLang]['err-fill']; return; }
+  setBtn('l-btn', true);
+  try {
+    const r = await fetch('login.php', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fullname:name,password:pass})});
+    const data = await r.json();
+    if (data.success) {
+      localStorage.setItem('currentUser', JSON.stringify({name:data.name,grade:data.grade,score:data.total_score,id:data.id,role:data.role||'student'}));
+      window.location.href = 'index.html';
+    } else {
+      const msgs = {wrong_credentials:LT[loginLang]['err-wrong'],missing_fields:LT[loginLang]['err-fill']};
+      err.innerText = msgs[data.error] || LT[loginLang]['err-wrong'];
+    }
+  } catch(e) { err.innerText = LT[loginLang]['err-server']; }
+  setBtn('l-btn', false);
+}
+
+async function doSignup() {
+  const name = document.getElementById('s-name').value.trim();
+  const pass = document.getElementById('s-pass').value;
+  const err = document.getElementById('s-err');
+  const ok = document.getElementById('s-ok');
+  err.innerText = ''; ok.innerText = '';
+
+  if (!name || !pass) { err.innerText = LT[loginLang]['err-fill']; return; }
+  if (pass.length < 6) { err.innerText = LT[loginLang]['err-pass']; return; }
+
+  let grade = '';
+  let subject = '';
+  let role = selectedRole;
+
+  if (role === 'student') {
+    grade = getGrade();
+    if (!grade) { err.innerText = LT[loginLang]['err-fill']; return; }
+  }
+
+  if (role === 'teacher') {
+    const tcode = document.getElementById('teacher-code').value;
+    // Validate teacher code (client-side check; real validation is server-side)
+    if (!tcode) { err.innerText = LT[loginLang]['err-fill']; return; }
+    if (tcode !== TEACHER_CODE_HASH) {
+      err.innerText = LT[loginLang]['err-teacher-code'];
+      document.getElementById('teacher-code').style.borderColor = '#ef4444';
+      setTimeout(()=>{ document.getElementById('teacher-code').style.borderColor=''; }, 2000);
+      return;
+    }
+    subject = document.getElementById('s-subject').value;
+    grade = 'TEACHER-' + subject.toUpperCase();
+  }
+
+  setBtn('s-btn', true);
+  try {
+    const r = await fetch('signup.php', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fullname:name,grade:grade,password:pass,role:role,teacher_code:role==='teacher'?document.getElementById('teacher-code').value:''})});
+    const data = await r.json();
+    if (data.success) {
+      localStorage.setItem('currentUser', JSON.stringify({name:data.name,grade:data.grade,score:0,role:role}));
+      ok.innerText = LT[loginLang]['ok-created'];
+      setTimeout(()=>{ window.location.href='index.html'; }, 1000);
+    } else {
+      const msgs = {name_taken:LT[loginLang]['err-taken'],password_short:LT[loginLang]['err-pass'],missing_fields:LT[loginLang]['err-fill'],invalid_teacher_code:LT[loginLang]['err-teacher-code']};
+      err.innerText = msgs[data.error] || LT[loginLang]['err-fill'];
+    }
+  } catch(e) { err.innerText = LT[loginLang]['err-server']; }
+  setBtn('s-btn', false);
+}
+
+// Init
+setLoginLang(loginLang);
+</script>
+</body>
+</html>

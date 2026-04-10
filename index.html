@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<html lang="ru" id="html-root">
+<head> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlymChems | Лицей Алымбек Датка</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+img{max-width:100%;height:auto;display:block;}
+body{font-family:"Poppins",sans-serif;background:radial-gradient(circle at top,#0f172a,#020617);color:white;overflow-x:hidden;}
+nav{display:flex;justify-content:space-between;align-items:center;padding:14px 50px;background:rgba(255,255,255,0.04);backdrop-filter:blur(12px);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(255,255,255,0.06);}
+.logo{font-weight:800;font-size:20px;display:flex;align-items:center;gap:8px;}
+.logo span{color:#38bdf8;}
+.nav-links{display:flex;align-items:center;gap:18px;}
+.nav-links a{color:#94a3b8;text-decoration:none;font-weight:400;transition:0.3s;font-size:14px;}
+.nav-links a:hover{color:white;}
+#auth-btn{padding:8px 18px;background:#2563eb;border-radius:8px;color:white!important;font-weight:700;font-size:13px;}
+#auth-btn:hover{background:#1d4ed8!important;}
+.lang-switcher{display:flex;gap:6px;align-items:center;margin-right:4px;}
+.lang-btn{background:none;border:2px solid transparent;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;color:#94a3b8;transition:0.25s;opacity:0.7;line-height:1;letter-spacing:0.5px;}
+.lang-btn:hover{opacity:1;transform:scale(1.05);color:white;}
+.lang-btn.active{opacity:1;border-color:#38bdf8;color:#38bdf8;box-shadow:0 0 8px rgba(56,189,248,0.4);}
+.hero{text-align:center;padding:110px 20px 80px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 50% 0%, rgba(37,99,235,0.15), transparent 70%);pointer-events:none;}
+.bubble{position:absolute;border-radius:50%;background:rgba(56,189,248,0.15);animation:float 8s infinite ease-in-out;}
+.bubble:nth-child(1){width:60px;height:60px;left:8%;top:75%;}
+.bubble:nth-child(2){width:100px;height:100px;left:85%;top:65%;animation-delay:2s;}
+.bubble:nth-child(3){width:40px;height:40px;left:50%;top:88%;animation-delay:4s;}
+@keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-70px);}100%{transform:translateY(0);}}
+.hero h1{font-size:52px;font-weight:800;line-height:1.15;margin-bottom:16px;}
+.hero h1 span{color:#38bdf8;}
+.hero p{color:#64748b;margin:0 auto 32px;max-width:560px;font-size:16px;line-height:1.7;}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn{padding:13px 28px;background:#2563eb;border:none;border-radius:10px;cursor:pointer;color:white;transition:0.3s;font-size:15px;font-weight:700;font-family:inherit;text-decoration:none;display:inline-block;}
+.btn:hover{transform:translateY(-2px);background:#1d4ed8;}
+.btn-ghost{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);}
+.btn-ghost:hover{background:rgba(255,255,255,0.12);}
+.section{padding:70px 40px;max-width:1200px;margin:auto;}
+.section-ttl{text-align:center;margin-bottom:10px;font-size:32px;font-weight:800;}
+.section-sub{text-align:center;color:#475569;margin-bottom:36px;font-size:14px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+.card{background:rgba(255,255,255,0.04);padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,0.07);transition:0.35s;cursor:pointer;}
+.card:hover{transform:translateY(-8px);border-color:rgba(56,189,248,0.3);background:rgba(255,255,255,0.07);}
+.card h3{margin-bottom:8px;font-size:17px;}
+.card p{color:#475569;font-size:13px;line-height:1.6;}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
+.info img{border-radius:20px;width:100%;max-width:380px;justify-self:center;}
+.info h2{font-size:28px;font-weight:800;margin-bottom:16px;}
+.info p{color:#64748b;line-height:1.8;font-size:14px;}
+.tag{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;margin:4px;}
+.stats-banner{background:linear-gradient(135deg,rgba(37,99,235,0.2),rgba(56,189,248,0.1));border:1px solid rgba(56,189,248,0.2);border-radius:24px;padding:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;text-align:center;}
+.stat-n{font-size:38px;font-weight:800;color:#38bdf8;}
+.stat-l{color:#475569;font-size:13px;margin-top:4px;}
+.feature-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:28px;transition:0.35s;cursor:pointer;}
+.feature-card:hover{transform:translateY(-6px);border-color:rgba(56,189,248,0.35);}
+.feature-icon{font-size:36px;margin-bottom:14px;}
+.feature-card h3{font-size:18px;margin-bottom:8px;}
+.feature-card p{color:#475569;font-size:13px;line-height:1.6;}
+.big-label{font-size:76px;font-weight:800;text-align:center;letter-spacing:14px;text-transform:uppercase;color:white;margin-bottom:36px;user-select:none;}
+.lb-wrap{background:rgba(255,255,255,0.03);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
+.lb-hdr{background:linear-gradient(135deg,rgba(37,99,235,0.3),rgba(56,189,248,0.15));padding:14px 22px;display:grid;grid-template-columns:50px 1fr 100px;font-size:12px;color:#64748b;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.lb-row{padding:14px 22px;display:grid;grid-template-columns:50px 1fr 100px;align-items:center;border-top:1px solid rgba(255,255,255,0.04);transition:0.2s;}
+.lb-row:hover{background:rgba(255,255,255,0.03);}
+.lb-rank{font-size:18px;font-weight:800;}
+.lb-score{color:#38bdf8;font-weight:800;}
+.r1{color:#fbbf24;}.r2{color:#9ca3af;}.r3{color:#cd7c3c;}
+.fact-box{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:18px;padding:24px;position:relative;overflow:hidden;}
+.fact-box::before{content:'💡';position:absolute;right:18px;top:12px;font-size:44px;opacity:0.15;}
+.fact-ttl{color:#4ade80;font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.fact-txt{color:#cbd5e1;font-size:16px;line-height:1.7;}
+.quote{background:rgba(56,189,248,0.06);border-left:4px solid #38bdf8;border-radius:0 16px 16px 0;padding:22px 28px;font-style:italic;font-size:17px;color:#cbd5e1;line-height:1.7;}
+.quote-a{margin-top:10px;font-style:normal;font-size:12px;color:#475569;}
+.elem-pill{display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:10px 14px;margin:4px;text-align:center;width:72px;transition:0.3s;cursor:default;}
+.elem-pill:hover{background:rgba(56,189,248,0.15);border-color:#38bdf8;transform:scale(1.08);}
+.elem-pill .sym{font-size:20px;font-weight:800;color:#38bdf8;}
+.elem-pill .nm{font-size:9px;color:#475569;}
+.tl{position:relative;padding-left:28px;}
+.tl::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#2563eb,#38bdf8,#10b981,#fbbf24);}
+.tl-item{position:relative;margin-bottom:20px;padding-left:16px;}
+.tl-item::before{content:'';position:absolute;left:-22px;top:5px;width:12px;height:12px;border-radius:50%;background:#38bdf8;box-shadow:0 0 8px #38bdf8;}
+.tl-item h4{color:#38bdf8;font-size:14px;margin-bottom:4px;}
+.tl-item p{color:#475569;font-size:13px;}
+.grade-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px;}
+.grade-btn{padding:10px 20px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;color:#94a3b8;transition:0.3s;font-size:14px;font-weight:700;font-family:inherit;}
+.grade-btn:hover,.grade-btn.active-grade{background:#2563eb;border-color:#2563eb;color:white;}
+.chem-banner{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(37,99,235,0.15));border:1px solid rgba(124,58,237,0.3);border-radius:24px;padding:40px;text-align:center;position:relative;overflow:hidden;}
+.chem-banner::before{content:'⚗️';position:absolute;right:30px;bottom:10px;font-size:80px;opacity:0.08;}
+.period-section{background:rgba(255,255,255,0.02);border-radius:24px;padding:32px;border:1px solid rgba(255,255,255,0.06);}
+footer{text-align:center;padding:30px;background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.05);}
+@media(max-width:800px){.info{grid-template-columns:1fr;}nav{padding:14px 20px;}.nav-links{gap:8px;}.hero h1{font-size:34px;}.big-label{font-size:44px;letter-spacing:6px;}.hide-sm{display:none!important;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">⚗️ Alym<span>Chems</span></div>
+  <div class="nav-links">
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-ru" onclick="setLang('ru')" title="Русский">RU</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')" title="English">ENG</button>
+    </div>
+    <a href="#about" class="hide-sm" id="nav-about">О школе</a>
+    <a href="#features" class="hide-sm" id="nav-platform">Платформа</a>
+    <a href="#chapters" class="hide-sm" id="nav-learn">Учись</a>
+    <a href="upcoming-events.html" id="nav-events">События</a>
+    <a href="login.html" id="auth-btn">Войти</a>
+    <a href="teacher.html" id="teacher-btn" style="display:none;padding:8px 14px;background:rgba(245,158,11,0.2);border:1px solid #f59e0b;border-radius:8px;color:#fbbf24;font-weight:700;font-size:13px;text-decoration:none;">👩‍🏫 Мой класс</a>
+    <a href="admins.php" id="admin-btn" style="display:none;padding:8px 14px;background:rgba(239,68,68,0.2);border:1px solid #ef4444;border-radius:8px;color:#f87171;font-weight:700;font-size:13px;text-decoration:none;">🛡️ Админ</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  <h1 id="hero-title">Химия начинается<br><span>здесь</span></h1>
+  <p id="hero-sub">Образовательная платформа лицея Алымбек Датка (Ош). Учись, играй, соревнуйся и вдохновляйся миром молекул и реакций.</p>
+  <div class="hero-btns">
+    <a href="#features" class="btn" id="hero-btn1">🚀 Начать учиться</a>
+    <a href="login.html" class="btn btn-ghost" id="hero-signup-btn" id="hero-btn2">Создать аккаунт</a>
+  </div>
+</section>
+
+<section class="section" style="padding-top:20px;">
+  <div class="stats-banner">
+    <div><div class="stat-n">500+</div><div class="stat-l" id="stat1">Учеников</div></div>
+    <div><div class="stat-n">12</div><div class="stat-l" id="stat2">Учителей химии</div></div>
+    <div><div class="stat-n">30+</div><div class="stat-l" id="stat3">Медалей олимпиад</div></div>
+    <div><div class="stat-n">3</div><div class="stat-l" id="stat4">Современных лаборатории</div></div>
+    <div><div class="stat-n">Ош</div><div class="stat-l" id="stat5">Кыргызстан</div></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:20px;padding-bottom:30px;">
+  <div class="quote" id="main-quote">
+    "Наука сегодня — это технология завтра. Каждая реакция, каждый элемент, который ты изучаешь — это шаг к изменению мира."
+    <div class="quote-a">— AlymChems · Лицей Алымбек Датка, Ош</div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:10px;padding-bottom:30px;">
+  <div class="chem-banner">
+    <h2 id="chem-banner-ttl" style="font-size:28px;font-weight:800;margin-bottom:12px;color:#a78bfa;">🔬 Мир химии ждёт тебя</h2>
+    <p id="chem-banner-sub" style="color:#64748b;font-size:14px;max-width:600px;margin:0 auto;">Химия — это наука, лежащая в основе всего живого и неживого. От ДНК в твоих клетках до звёзд в галактиках — везде химия. Наша платформа помогает понять этот удивительный мир через игры, тесты и интерактивные уроки.</p>
+    <div style="margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <span style="background:rgba(124,58,237,0.2);border:1px solid #7c3aed;color:#a78bfa;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;" id="badge1">⚗️ Органическая химия</span>
+      <span style="background:rgba(37,99,235,0.2);border:1px solid #2563eb;color:#93c5fd;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;" id="badge2">🧪 Реакции</span>
+      <span style="background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#4ade80;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;" id="badge3">🔋 Электрохимия</span>
+      <span style="background:rgba(245,158,11,0.2);border:1px solid #f59e0b;color:#fbbf24;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;" id="badge4">🌡️ Термохимия</span>
+      <span style="background:rgba(239,68,68,0.2);border:1px solid #ef4444;color:#f87171;padding:7px 18px;border-radius:20px;font-size:13px;font-weight:700;" id="badge5">⚛️ Ядерная химия</span>
+    </div>
+  </div>
+</section>
+
+<section class="section info" id="about">
+  <div>
+    <h2 id="about-ttl">О нашей школе</h2>
+    <p id="about-p1">Лицей Алымбек Датка (бывш. Ош Сема) — одно из ведущих учебных заведений Кыргызстана, ориентированных на современное научное образование и развитие аналитического мышления.</p>
+    <p style="margin-top:14px;" id="about-p2">Химия занимает ключевое место в учебной программе. Ученики развивают научное любопытство, навыки решения задач и страсть к открытиям.</p>
+    <div style="margin-top:20px;">
+      <span class="tag" style="background:rgba(37,99,235,0.2);border:1px solid #2563eb;color:#93c5fd;" id="tag1">🏫 Основан 1995</span>
+      <span class="tag" style="background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#4ade80;" id="tag2">🏆 Лучшая школа</span>
+      <span class="tag" style="background:rgba(56,189,248,0.2);border:1px solid #38bdf8;color:#38bdf8;" id="tag3">🔬 3 Лаборатории</span>
+      <span class="tag" style="background:rgba(245,158,11,0.2);border:1px solid #f59e0b;color:#fbbf24;" id="tag4">📍 Ош, Кыргызстан</span>
+    </div>
+    <div class="tl" style="margin-top:24px;">
+      <div class="tl-item"><h4 id="gr7">7 класс</h4><p id="gr7t">Введение в химию, атомы, состояния вещества</p></div>
+      <div class="tl-item"><h4 id="gr8">8 класс</h4><p id="gr8t">Химические реакции, кислоты и основания, металлы</p></div>
+      <div class="tl-item"><h4 id="gr9">9 класс</h4><p id="gr9t">Органическая химия, электрохимия, стехиометрия</p></div>
+      <div class="tl-item"><h4 style="color:#4ade80;" id="gr10">10 класс</h4><p id="gr10t">Аналитическая химия, равновесие, термохимия</p></div>
+      <div class="tl-item"><h4 style="color:#fbbf24;" id="gr11">11 класс</h4><p id="gr11t">Углублённая органика, ядерная химия, подготовка к олимпиадам</p></div>
+    </div>
+  </div>
+  <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500" alt="school">
+</section>
+
+<section class="section info" style="padding-top:0;">
+  <img src="https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=500" alt="lab">
+  <div>
+    <h2 id="labs-ttl">Наши лаборатории</h2>
+    <p id="labs-p1">Современные химические лаборатории сочетают теорию с практикой. Ученики проводят настоящие эксперименты в безопасной среде под руководством опытных учителей.</p>
+    <p style="margin-top:14px;" id="labs-p2">Темы охватывают органическую химию, таблицу Менделеева, стехиометрию, электрохимию и современные научные приложения.</p>
+    <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:14px;"><div style="font-size:22px;">🧫</div><div style="font-size:13px;font-weight:700;margin-top:6px;" id="lab1h">Биохимия</div><div style="font-size:11px;color:#475569;" id="lab1s">Белки, ДНК, ферменты</div></div>
+      <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:14px;"><div style="font-size:22px;">⚡</div><div style="font-size:13px;font-weight:700;margin-top:6px;" id="lab2h">Электролиз</div><div style="font-size:11px;color:#475569;" id="lab2s">Электрохимия на практике</div></div>
+      <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:14px;"><div style="font-size:22px;">🔥</div><div style="font-size:13px;font-weight:700;margin-top:6px;" id="lab3h">Горение</div><div style="font-size:11px;color:#475569;" id="lab3s">Реакции окисления</div></div>
+      <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:14px;"><div style="font-size:22px;">🌡️</div><div style="font-size:13px;font-weight:700;margin-top:6px;" id="lab4h">Термометрия</div><div style="font-size:11px;color:#475569;" id="lab4s">Тепловые эффекты реакций</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-ttl" id="facts-ttl">💡 Знаешь ли ты?</div>
+  <div class="section-sub" id="facts-sub">Удивительные факты о химии вокруг нас</div>
+  <div class="cards">
+    <div class="card"><h3 id="fc1h">⚛️ Ты — химия</h3><p id="fc1p">Тело человека содержит около 60 химических элементов. Кислород, углерод, водород и азот составляют более 96% массы тела.</p></div>
+    <div class="card"><h3 id="fc2h">💧 Вода — странная</h3><p id="fc2p">Вода — одно из немногих веществ, которое расширяется при замерзании. Именно поэтому лёд плавает и жизнь в замёрзших озёрах выживает зимой.</p></div>
+    <div class="card"><h3 id="fc3h">🌟 Звёзды создают элементы</h3><p id="fc3p">Каждый атом тяжелее водорода в твоём теле был создан внутри звезды. Ты буквально сделан из звёздной пыли.</p></div>
+    <div class="card"><h3 id="fc4h">🔋 Электрохимия везде</h3><p id="fc4p">Каждое сообщение нейронов, каждое сердцебиение — работают на электрохимических реакциях с ионами натрия, калия и кальция.</p></div>
+    <div class="card"><h3 id="fc5h">💎 Алмаз = Уголь</h3><p id="fc5p">Алмаз и графит состоят полностью из углерода. Но их атомная структура делает один самым твёрдым, а другой — мягким как карандаш.</p></div>
+    <div class="card"><h3 id="fc6h">🌊 78% воздуха</h3><p id="fc6p">Воздух на 78% состоит из азота — инертного газа без цвета и запаха. Кислород, которым мы дышим, составляет лишь 21%.</p></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:30px;">
+  <div class="section-ttl" id="elem-ttl">🧬 Элементы которые изучишь</div>
+  <div class="section-sub" id="elem-sub">Наведи на элемент</div>
+  <div class="period-section">
+    <div style="text-align:center;">
+      <div class="elem-pill"><div class="sym">H</div><div class="nm">Hydrogen</div></div>
+      <div class="elem-pill"><div class="sym">He</div><div class="nm">Helium</div></div>
+      <div class="elem-pill"><div class="sym">C</div><div class="nm">Carbon</div></div>
+      <div class="elem-pill"><div class="sym">O</div><div class="nm">Oxygen</div></div>
+      <div class="elem-pill"><div class="sym">N</div><div class="nm">Nitrogen</div></div>
+      <div class="elem-pill"><div class="sym">Na</div><div class="nm">Sodium</div></div>
+      <div class="elem-pill"><div class="sym">Mg</div><div class="nm">Magnesium</div></div>
+      <div class="elem-pill"><div class="sym">Al</div><div class="nm">Aluminum</div></div>
+      <div class="elem-pill"><div class="sym">Si</div><div class="nm">Silicon</div></div>
+      <div class="elem-pill"><div class="sym">P</div><div class="nm">Phosphorus</div></div>
+      <div class="elem-pill"><div class="sym">S</div><div class="nm">Sulfur</div></div>
+      <div class="elem-pill"><div class="sym">Cl</div><div class="nm">Chlorine</div></div>
+      <div class="elem-pill"><div class="sym">Fe</div><div class="nm">Iron</div></div>
+      <div class="elem-pill"><div class="sym">Cu</div><div class="nm">Copper</div></div>
+      <div class="elem-pill"><div class="sym">Zn</div><div class="nm">Zinc</div></div>
+      <div class="elem-pill"><div class="sym">Au</div><div class="nm">Gold</div></div>
+      <div class="elem-pill"><div class="sym">Ag</div><div class="nm">Silver</div></div>
+      <div class="elem-pill"><div class="sym">Ca</div><div class="nm">Calcium</div></div>
+      <div class="elem-pill"><div class="sym">K</div><div class="nm">Potassium</div></div>
+      <div class="elem-pill"><div class="sym">Pb</div><div class="nm">Lead</div></div>
+      <div class="elem-pill"><div class="sym">Hg</div><div class="nm">Mercury</div></div>
+      <div class="elem-pill"><div class="sym">Br</div><div class="nm">Bromine</div></div>
+      <div class="elem-pill"><div class="sym">I</div><div class="nm">Iodine</div></div>
+      <div class="elem-pill"><div class="sym">F</div><div class="nm">Fluorine</div></div>
+    </div>
+    <div style="text-align:center;margin-top:18px;">
+      <a href="https://ptable.com" target="_blank" style="display:inline-block;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);color:#38bdf8;padding:10px 24px;border-radius:12px;font-size:13px;font-weight:700;text-decoration:none;" id="ptable-link">📊 Открыть полную таблицу Менделеева →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="section-ttl" id="feat-ttl">🎮 Платформа AlymChems</div>
+  <div class="section-sub" id="feat-sub">Всё необходимое для изучения химии — в одном месте</div>
+  <div class="cards">
+    <div class="feature-card" onclick="location.href='games.html'"><div class="feature-icon">🎮</div><h3 id="fh1">Игры</h3><p id="fp1">Symbol Master, Реактор, Молекулы, Element Catcher, Таблица Менделеева. Играй и зарабатывай очки!</p></div>
+    <div class="feature-card" onclick="location.href='tests.html'"><div class="feature-icon">📝</div><h3 id="fh2">Тесты</h3><p id="fp2">Тематические тесты для 7-11 класса с прогресс-баром, мгновенным фидбеком и сохранением результатов.</p></div>
+    <div class="feature-card" onclick="location.href='quizzes.html'"><div class="feature-icon">❓</div><h3 id="fh3">Квизы</h3><p id="fp3">Быстрые проверки знаний по кислотам, реакциям, органике и другим темам. Проверь себя за 5 минут!</p></div>
+    <div class="feature-card" onclick="location.href='teachers.html'"><div class="feature-icon">👩‍🏫</div><h3 id="fh4">Учителя</h3><p id="fp4">Познакомься с нашими экспертами по химии — специалистами с многолетним опытом и победителями конкурсов.</p></div>
+    <div class="feature-card" onclick="location.href='upcoming-events.html'"><div class="feature-icon">📅</div><h3 id="fh5">События</h3><p id="fp5">Олимпиады, научные ярмарки, лабораторные воркшопы. Следи за расписанием и не пропускай!</p></div>
+    <div class="feature-card" onclick="location.href='profile.html'"><div class="feature-icon">🏅</div><h3 id="fh6">Профиль</h3><p id="fp6">Твой рейтинг, заработанные значки, история выполненных тестов и место в лидерборде школы.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-ttl" id="lb-ttl">🏆 Лидерборд школы</div>
+  <div class="section-sub" id="lb-sub">Играй в игры и проходи тесты чтобы попасть сюда!</div>
+  <div class="lb-wrap">
+    <div class="lb-hdr"><span>#</span><span id="lb-col-student">Ученик</span><span id="lb-col-score">Очки</span></div>
+    <div id="lb-body"><div style="padding:20px;text-align:center;color:#334155;font-size:13px;" id="lb-loading">Загрузка...</div></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="fact-box">
+    <div class="fact-ttl" id="fact-label">Факт дня</div>
+    <div class="fact-txt" id="fact-txt"></div>
+    <button onclick="nextFact()" style="margin-top:14px;background:rgba(74,222,128,0.15);border:1px solid #4ade80;color:#4ade80;padding:8px 18px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit;" id="fact-btn">Следующий факт →</button>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-ttl" id="chem-ttl">🌟 Вдохновляющие химики</div>
+  <div class="section-sub" id="chem-sub">Они начинали как любопытные ученики — так же как ты</div>
+  <div class="cards">
+    <div class="card" style="border-left:3px solid #38bdf8;"><h3>Мария Кюри</h3><p style="margin-top:6px;" id="curie-p">«Ничего в жизни не нужно бояться, нужно только понять.» Первая женщина-лауреат Нобелевской премии. Открыла полоний и радий.</p></div>
+    <div class="card" style="border-left:3px solid #fbbf24;"><h3>Дмитрий Менделеев</h3><p style="margin-top:6px;" id="mend-p">Создал Периодическую таблицу в 1869 году. Он даже предсказал свойства ещё не открытых элементов!</p></div>
+    <div class="card" style="border-left:3px solid #4ade80;"><h3>Линус Полинг</h3><p style="margin-top:6px;" id="paul-p">Единственный человек, получивший ДВЕ Нобелевских премии — по химии и за мир. Изменил понимание химических связей.</p></div>
+    <div class="card" style="border-left:3px solid #f87171;background:rgba(37,99,235,0.06);"><h3 id="you-h">Следующий — ты?</h3><p style="margin-top:6px;" id="you-p">Каждый великий учёный начинал как любопытный ученик. Учись, задавай вопросы — и однажды твоё имя будет вдохновлять других!</p></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-ttl" id="act-ttl">🔬 Активности</div>
+  <div class="cards">
+    <div class="card"><h3 id="act1h">🧪 Лабораторные опыты</h3><p id="act1p">Настоящие эксперименты которые оживляют химию в наших современных лабораториях</p></div>
+    <div class="card" onclick="location.href='upcoming-events.html'" style="cursor:pointer;"><h3 id="act2h">🏆 Соревнования</h3><p id="act2p">Участие в национальных олимпиадах и научных конкурсах. Нажми чтобы увидеть даты!</p></div>
+    <div class="card"><h3 id="act3h">🔬 Исследования</h3><p id="act3p">Ученики разрабатывают собственные исследовательские проекты под руководством учителей</p></div>
+    <div class="card"><h3 id="act4h">🌍 Ярмарки науки</h3><p id="act4p">Ежегодная ярмарка где ученики представляют инновационные эксперименты сообществу</p></div>
+  </div>
+</section>
+
+<section class="section" id="chapters">
+  <h1 class="big-label" id="learn-label">УЧИСЬ</h1>
+  <div class="section-sub" id="learn-sub">Выбери класс и тему</div>
+  <div class="grade-btns" id="grade-btns-row"></div>
+  <div id="topics" class="cards"></div>
+</section>
+
+<footer>
+  <p style="font-weight:800;margin-bottom:6px;">⚗️ AlymChems · Лицей Алымбек Датка</p>
+  <p style="color:#334155;font-size:13px;" id="footer-loc">Email: alymbekdatka@school.com · Ош, Кыргызстан</p>
+  <p style="color:#1e293b;font-size:12px;margin-top:6px;">© 2026 AlymChems</p>
+</footer>
+
+<script>
+// ─── TRANSLATIONS ──────────────────────────────────────────────────────────
+const T = {
+  ru: {
+    'nav-about':'О школе','nav-platform':'Платформа','nav-learn':'Учись','nav-events':'События','auth-btn':'Войти',
+    'hero-title':'Химия начинается<br><span style="color:#38bdf8">здесь</span>',
+    'hero-sub':'Образовательная платформа лицея Алымбек Датка (Ош). Учись, играй, соревнуйся и вдохновляйся миром молекул и реакций.',
+    'hero-btn1':'🚀 Начать учиться','hero-signup-btn':'Создать аккаунт',
+    'stat1':'Учеников','stat2':'Учителей химии','stat3':'Медалей олимпиад','stat4':'Современных лаборатории','stat5':'Кыргызстан',
+    'chem-banner-ttl':'🔬 Мир химии ждёт тебя',
+    'chem-banner-sub':'Химия — это наука, лежащая в основе всего живого и неживого. От ДНК в твоих клетках до звёзд в галактиках — везде химия. Наша платформа помогает понять этот удивительный мир через игры, тесты и интерактивные уроки.',
+    'badge1':'⚗️ Органическая химия','badge2':'🧪 Реакции','badge3':'🔋 Электрохимия','badge4':'🌡️ Термохимия','badge5':'⚛️ Ядерная химия',
+    'about-ttl':'О нашей школе',
+    'about-p1':'Лицей Алымбек Датка (бывш. Ош Сема) — одно из ведущих учебных заведений Кыргызстана, ориентированных на современное научное образование и развитие аналитического мышления.',
+    'about-p2':'Химия занимает ключевое место в учебной программе. Ученики развивают научное любопытство, навыки решения задач и страсть к открытиям.',
+    'tag1':'🏫 Основан 1995','tag2':'🏆 Лучшая школа','tag3':'🔬 3 Лаборатории','tag4':'📍 Ош, Кыргызстан',
+    'gr7':'7 класс','gr7t':'Введение в химию, атомы, состояния вещества',
+    'gr8':'8 класс','gr8t':'Химические реакции, кислоты и основания, металлы',
+    'gr9':'9 класс','gr9t':'Органическая химия, электрохимия, стехиометрия',
+    'gr10':'10 класс','gr10t':'Аналитическая химия, равновесие, термохимия',
+    'gr11':'11 класс','gr11t':'Углублённая органика, ядерная химия, подготовка к олимпиадам',
+    'labs-ttl':'Наши лаборатории',
+    'labs-p1':'Современные химические лаборатории сочетают теорию с практикой. Ученики проводят настоящие эксперименты в безопасной среде под руководством опытных учителей.',
+    'labs-p2':'Темы охватывают органическую химию, таблицу Менделеева, стехиометрию, электрохимию и современные научные приложения.',
+    'lab1h':'Биохимия','lab1s':'Белки, ДНК, ферменты','lab2h':'Электролиз','lab2s':'Электрохимия на практике',
+    'lab3h':'Горение','lab3s':'Реакции окисления','lab4h':'Термометрия','lab4s':'Тепловые эффекты реакций',
+    'facts-ttl':'💡 Знаешь ли ты?','facts-sub':'Удивительные факты о химии вокруг нас',
+    'fc1h':'⚛️ Ты — химия','fc1p':'Тело человека содержит около 60 химических элементов. Кислород, углерод, водород и азот составляют более 96% массы тела.',
+    'fc2h':'💧 Вода — странная','fc2p':'Вода — одно из немногих веществ, которое расширяется при замерзании. Именно поэтому лёд плавает и жизнь в замёрзших озёрах выживает зимой.',
+    'fc3h':'🌟 Звёзды создают элементы','fc3p':'Каждый атом тяжелее водорода в твоём теле был создан внутри звезды. Ты буквально сделан из звёздной пыли.',
+    'fc4h':'🔋 Электрохимия везде','fc4p':'Каждое сообщение нейронов, каждое сердцебиение — работают на электрохимических реакциях с ионами натрия, калия и кальция.',
+    'fc5h':'💎 Алмаз = Уголь','fc5p':'Алмаз и графит состоят полностью из углерода. Но их атомная структура делает один самым твёрдым, а другой — мягким как карандаш.',
+    'fc6h':'🌊 78% воздуха','fc6p':'Воздух на 78% состоит из азота — инертного газа без цвета и запаха. Кислород, которым мы дышим, составляет лишь 21%.',
+    'elem-ttl':'🧬 Элементы которые изучишь','elem-sub':'Наведи на элемент',
+    'ptable-link':'📊 Открыть полную таблицу Менделеева →',
+    'feat-ttl':'🎮 Платформа AlymChems','feat-sub':'Всё необходимое для изучения химии — в одном месте',
+    'fh1':'Игры','fp1':'Symbol Master, Реактор, Молекулы, Element Catcher, Таблица Менделеева. Играй и зарабатывай очки!',
+    'fh2':'Тесты','fp2':'Тематические тесты для 7-11 класса с прогресс-баром, мгновенным фидбеком и сохранением результатов.',
+    'fh3':'Квизы','fp3':'Быстрые проверки знаний по кислотам, реакциям, органике и другим темам. Проверь себя за 5 минут!',
+    'fh4':'Учителя','fp4':'Познакомься с нашими экспертами по химии — специалистами с многолетним опытом и победителями конкурсов.',
+    'fh5':'События','fp5':'Олимпиады, научные ярмарки, лабораторные воркшопы. Следи за расписанием и не пропускай!',
+    'fh6':'Профиль','fp6':'Твой рейтинг, заработанные значки, история выполненных тестов и место в лидерборде школы.',
+    'lb-ttl':'🏆 Лидерборд школы','lb-sub':'Играй в игры и проходи тесты чтобы попасть сюда!',
+    'lb-col-student':'Ученик','lb-col-score':'Очки','lb-loading':'Загрузка...',
+    'fact-label':'Факт дня','fact-btn':'Следующий факт →',
+    'chem-ttl':'🌟 Вдохновляющие химики','chem-sub':'Они начинали как любопытные ученики — так же как ты',
+    'curie-p':'«Ничего в жизни не нужно бояться, нужно только понять.» Первая женщина-лауреат Нобелевской премии. Открыла полоний и радий.',
+    'mend-p':'Создал Периодическую таблицу в 1869 году. Он даже предсказал свойства ещё не открытых элементов!',
+    'paul-p':'Единственный человек, получивший ДВЕ Нобелевских премии — по химии и за мир. Изменил понимание химических связей.',
+    'you-h':'Следующий — ты?','you-p':'Каждый великий учёный начинал как любопытный ученик. Учись, задавай вопросы — и однажды твоё имя будет вдохновлять других!',
+    'act-ttl':'🔬 Активности',
+    'act1h':'🧪 Лабораторные опыты','act1p':'Настоящие эксперименты которые оживляют химию в наших современных лабораториях',
+    'act2h':'🏆 Соревнования','act2p':'Участие в национальных олимпиадах и научных конкурсах. Нажми чтобы увидеть даты!',
+    'act3h':'🔬 Исследования','act3p':'Ученики разрабатывают собственные исследовательские проекты под руководством учителей',
+    'act4h':'🌍 Ярмарки науки','act4p':'Ежегодная ярмарка где ученики представляют инновационные эксперименты сообществу',
+    'learn-label':'УЧИСЬ','learn-sub':'Выбери класс и тему','footer-loc':'Email: alymbekdatka@school.com · Ош, Кыргызстан',
+    'gradeWord':'класс'
+  },
+  en: {
+    'nav-about':'About','nav-platform':'Platform','nav-learn':'Learn','nav-events':'Events','auth-btn':'Sign In',
+    'hero-title':'Chemistry<br><span style="color:#38bdf8">starts here</span>',
+    'hero-sub':'Educational platform of Alymbek Datka Lyceum (Osh). Learn, play, compete and get inspired by the world of molecules and reactions.',
+    'hero-btn1':'🚀 Start Learning','hero-signup-btn':'Create Account',
+    'stat1':'Students','stat2':'Chemistry Teachers','stat3':'Olympiad Medals','stat4':'Modern Laboratories','stat5':'Kyrgyzstan',
+    'chem-banner-ttl':'🔬 The World of Chemistry Awaits',
+    'chem-banner-sub':'Chemistry is the science underlying everything living and non-living. From DNA in your cells to stars in galaxies — chemistry is everywhere. Our platform helps you understand this amazing world through games, tests and interactive lessons.',
+    'badge1':'⚗️ Organic Chemistry','badge2':'🧪 Reactions','badge3':'🔋 Electrochemistry','badge4':'🌡️ Thermochemistry','badge5':'⚛️ Nuclear Chemistry',
+    'about-ttl':'About Our School',
+    'about-p1':'Alymbek Datka Lyceum (formerly Osh Sema) is one of the leading educational institutions in Kyrgyzstan, focused on modern science education and developing analytical thinking.',
+    'about-p2':'Chemistry holds a key place in the curriculum. Students develop scientific curiosity, problem-solving skills and a passion for discovery.',
+    'tag1':'🏫 Founded 1995','tag2':'🏆 Top School','tag3':'🔬 3 Laboratories','tag4':'📍 Osh, Kyrgyzstan',
+    'gr7':'Grade 7','gr7t':'Introduction to chemistry, atoms, states of matter',
+    'gr8':'Grade 8','gr8t':'Chemical reactions, acids and bases, metals',
+    'gr9':'Grade 9','gr9t':'Organic chemistry, electrochemistry, stoichiometry',
+    'gr10':'Grade 10','gr10t':'Analytical chemistry, equilibrium, thermochemistry',
+    'gr11':'Grade 11','gr11t':'Advanced organic chemistry, nuclear chemistry, olympiad preparation',
+    'labs-ttl':'Our Laboratories',
+    'labs-p1':'Modern chemistry laboratories combine theory with practice. Students conduct real experiments in a safe environment under the guidance of experienced teachers.',
+    'labs-p2':'Topics cover organic chemistry, the periodic table, stoichiometry, electrochemistry and modern scientific applications.',
+    'lab1h':'Biochemistry','lab1s':'Proteins, DNA, enzymes','lab2h':'Electrolysis','lab2s':'Electrochemistry in practice',
+    'lab3h':'Combustion','lab3s':'Oxidation reactions','lab4h':'Thermometry','lab4s':'Thermal effects of reactions',
+    'facts-ttl':'💡 Did You Know?','facts-sub':'Amazing chemistry facts around us',
+    'fc1h':'⚛️ You Are Chemistry','fc1p':'The human body contains about 60 chemical elements. Oxygen, carbon, hydrogen and nitrogen make up more than 96% of body mass.',
+    'fc2h':'💧 Water is Weird','fc2p':'Water is one of the few substances that expands when freezing. That\'s why ice floats and life in frozen lakes survives winter.',
+    'fc3h':'🌟 Stars Create Elements','fc3p':'Every atom heavier than hydrogen in your body was created inside a star. You are literally made of stardust.',
+    'fc4h':'🔋 Electrochemistry Everywhere','fc4p':'Every neuron signal, every heartbeat runs on electrochemical reactions with sodium, potassium and calcium ions.',
+    'fc5h':'💎 Diamond = Coal','fc5p':'Diamond and graphite are both pure carbon. But their atomic structure makes one the hardest substance and the other soft as a pencil.',
+    'fc6h':'🌊 78% of Air','fc6p':'Air is 78% nitrogen — a colorless, odorless inert gas. The oxygen we breathe makes up only 21%.',
+    'elem-ttl':'🧬 Elements You\'ll Study','elem-sub':'Hover over an element',
+    'ptable-link':'📊 Open full Periodic Table →',
+    'feat-ttl':'🎮 AlymChems Platform','feat-sub':'Everything you need to learn chemistry — in one place',
+    'fh1':'Games','fp1':'Symbol Master, Reactor, Molecules, Element Catcher, Periodic Table. Play and earn points!',
+    'fh2':'Tests','fp2':'Thematic tests for grades 7-11 with progress bar, instant feedback and saved results.',
+    'fh3':'Quizzes','fp3':'Quick knowledge checks on acids, reactions, organics and other topics. Test yourself in 5 minutes!',
+    'fh4':'Teachers','fp4':'Meet our chemistry experts — specialists with years of experience and competition winners.',
+    'fh5':'Events','fp5':'Olympiads, science fairs, lab workshops. Follow the schedule and don\'t miss out!',
+    'fh6':'Profile','fp6':'Your ranking, earned badges, test history and position in the school leaderboard.',
+    'lb-ttl':'🏆 School Leaderboard','lb-sub':'Play games and take tests to get here!',
+    'lb-col-student':'Student','lb-col-score':'Score','lb-loading':'Loading...',
+    'fact-label':'Fact of the Day','fact-btn':'Next fact →',
+    'chem-ttl':'🌟 Inspiring Chemists','chem-sub':'They started as curious students — just like you',
+    'curie-p':'"Nothing in life is to be feared, only to be understood." First female Nobel laureate. Discovered polonium and radium.',
+    'mend-p':'Created the Periodic Table in 1869. He even predicted the properties of yet-undiscovered elements!',
+    'paul-p':'The only person to win TWO Nobel Prizes — in chemistry and for peace. Changed our understanding of chemical bonds.',
+    'you-h':'Next — You?','you-p':'Every great scientist started as a curious student. Study, ask questions — and one day your name will inspire others!',
+    'act-ttl':'🔬 Activities',
+    'act1h':'🧪 Lab Experiments','act1p':'Real experiments that bring chemistry to life in our modern laboratories',
+    'act2h':'🏆 Competitions','act2p':'Participation in national olympiads and science competitions. Click to see dates!',
+    'act3h':'🔬 Research','act3p':'Students develop their own research projects under teacher guidance',
+    'act4h':'🌍 Science Fairs','act4p':'Annual fair where students present innovative experiments to the community',
+    'learn-label':'LEARN','learn-sub':'Choose your grade and topic','footer-loc':'Email: alymbekdatka@school.com · Osh, Kyrgyzstan',
+    'gradeWord':'grade'
+  }
+};
+
+let currentLang = localStorage.getItem('alymLang') || 'ru';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('alymLang', lang);
+  document.getElementById('btn-ru').classList.toggle('active', lang==='ru');
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  const t = T[lang];
+  for (const [id, val] of Object.entries(t)) {
+    if (id==='gradeWord') continue;
+    const el = document.getElementById(id);
+    if (!el) continue;
+    if (id==='hero-title') { el.innerHTML = val; }
+    else { el.textContent = val; }
+  }
+  document.getElementById('fact-txt').textContent = FACTS[lang][fi];
+  buildGradeButtons();
+  document.querySelectorAll('.grade-btn').forEach(b=>b.classList.remove('active-grade'));
+  document.getElementById('topics').innerHTML = '';
+}
+
+// ─── GRADE BUTTONS ──────────────────────────────────────────────────────────
+function buildGradeButtons() {
+  const row = document.getElementById('grade-btns-row');
+  const word = T[currentLang].gradeWord;
+  row.innerHTML = '';
+  [7,8,9,10,11].forEach(g => {
+    const b = document.createElement('button');
+    b.className = 'grade-btn';
+    b.textContent = `${g} ${word}`;
+    b.onclick = () => showGrade(g, b);
+    row.appendChild(b);
+  });
+}
+
+// ─── AUTH ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  setLang(currentLang);
+  buildGradeButtons();
+  const raw = localStorage.getItem('currentUser');
+  const btn = document.getElementById('auth-btn');
+  const signupBtn = document.getElementById('hero-signup-btn');
+  if (raw) {
+    try {
+      const u = JSON.parse(raw);
+      if (u && u.name) {
+        btn.innerText = '👤 '+u.name;
+        btn.href = 'profile.html';
+        btn.style.cssText = 'padding:8px 18px;background:rgba(56,189,248,0.15);border:1px solid #38bdf8;border-radius:8px;color:#38bdf8;font-weight:700;font-size:13px;text-decoration:none;';
+        if (signupBtn) signupBtn.style.display = 'none';
+        if (u.role === 'teacher' || u.role === 'admin') {
+          const tBtn = document.getElementById('teacher-btn');
+          if (tBtn) tBtn.style.display = 'inline-block';
+        }
+        if (u.role === 'admin') {
+          const aBtn = document.getElementById('admin-btn');
+          if (aBtn) aBtn.style.display = 'inline-block';
+        }
+      }
+    } catch(e) {}
+  }
+  loadLB();
+});
+
+// ─── LEADERBOARD ───────────────────────────────────────────────────────────
+async function loadLB() {
+  const body = document.getElementById('lb-body');
+  try {
+    const r = await fetch('scores_api.php?action=leaderboard');
+    const rows = await r.json();
+    if (!rows.length) { body.innerHTML=`<div style="padding:20px;text-align:center;color:#334155;font-size:13px;">${currentLang==='ru'?'Пока нет данных. Сыграй в игры!':'No data yet. Play some games!'}</div>`; return; }
+    const icons=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
+    const cls=['r1','r2','r3','','','','','','',''];
+    body.innerHTML = rows.map((u,i)=>`<div class="lb-row"><span class="lb-rank ${cls[i]||''}">${icons[i]||i+1}</span><span style="font-weight:600;">${u.fullname} <span style="color:#334155;font-size:12px;">· ${u.grade}</span></span><span class="lb-score">⭐ ${u.total_score}</span></div>`).join('');
+  } catch(e) {
+    body.innerHTML = `<div style="padding:20px;text-align:center;color:#334155;font-size:13px;">${currentLang==='ru'?'Лидерборд недоступен':'Leaderboard unavailable'}</div>`;
+  }
+}
+
+// ─── LEARN ─────────────────────────────────────────────────────────────────
+const learnData = {
+  7:[{ru:"Введение в химию",en:"Introduction to Chemistry",l:"https://www.youtube.com/results?search_query=introduction+to+chemistry+grade+7"},{ru:"Состояния вещества",en:"States of Matter",l:"https://www.youtube.com/results?search_query=states+of+matter+chemistry"},{ru:"Атомы и молекулы",en:"Atoms and Molecules",l:"https://www.youtube.com/results?search_query=atoms+and+molecules+basics"},{ru:"Основы периодической таблицы",en:"Periodic Table Basics",l:"https://www.youtube.com/results?search_query=periodic+table+basics+beginners"}],
+  8:[{ru:"Химические реакции",en:"Chemical Reactions",l:"https://www.youtube.com/results?search_query=chemical+reactions+grade+8"},{ru:"Кислоты и основания",en:"Acids and Bases",l:"https://www.youtube.com/results?search_query=acids+and+bases+chemistry"},{ru:"Металлы и неметаллы",en:"Metals and Non-metals",l:"https://www.youtube.com/results?search_query=metals+and+nonmetals+chemistry"},{ru:"Растворы и смеси",en:"Solutions and Mixtures",l:"https://www.youtube.com/results?search_query=solutions+mixtures+chemistry"}],
+  9:[{ru:"Основы органической химии",en:"Organic Chemistry Basics",l:"https://www.youtube.com/results?search_query=organic+chemistry+basics"},{ru:"Электрохимия",en:"Electrochemistry",l:"https://www.youtube.com/results?search_query=electrochemistry+basics"},{ru:"Химические связи",en:"Chemical Bonding",l:"https://www.youtube.com/results?search_query=chemical+bonding+types"},{ru:"Стехиометрия",en:"Stoichiometry",l:"https://www.youtube.com/results?search_query=stoichiometry+explained+easy"}],
+  10:[{ru:"Аналитическая химия",en:"Analytical Chemistry",l:"https://www.youtube.com/results?search_query=analytical+chemistry+basics"},{ru:"Химическое равновесие",en:"Chemical Equilibrium",l:"https://www.youtube.com/results?search_query=chemical+equilibrium+explained"},{ru:"Термохимия",en:"Thermochemistry",l:"https://www.youtube.com/results?search_query=thermochemistry+enthalpy+basics"},{ru:"Скорость реакций",en:"Reaction Rates",l:"https://www.youtube.com/results?search_query=reaction+rates+chemistry+grade+10"}],
+  11:[{ru:"Углублённая органика",en:"Advanced Organic Chemistry",l:"https://www.youtube.com/results?search_query=advanced+organic+chemistry+high+school"},{ru:"Ядерная химия",en:"Nuclear Chemistry",l:"https://www.youtube.com/results?search_query=nuclear+chemistry+radioactivity"},{ru:"Полимеры",en:"Polymers",l:"https://www.youtube.com/results?search_query=polymers+chemistry+explained"},{ru:"Подготовка к олимпиаде",en:"Olympiad Preparation",l:"https://www.youtube.com/results?search_query=chemistry+olympiad+preparation"}]
+};
+function showGrade(g, btn) {
+  document.querySelectorAll('.grade-btn').forEach(b=>b.classList.remove('active-grade'));
+  if(btn) btn.classList.add('active-grade');
+  const c = document.getElementById("topics"); c.innerHTML="";
+  learnData[g].forEach(t=>{
+    const d=document.createElement("div"); d.className="card";
+    d.innerHTML=`<h3>📺 ${currentLang==='ru'?t.ru:t.en}</h3><p>${currentLang==='ru'?'Нажми чтобы смотреть объяснение на YouTube':'Click to watch explanation on YouTube'}</p>`;
+    d.onclick=()=>window.open(t.l,"_blank");
+    c.appendChild(d);
+  });
+  document.getElementById("topics").scrollIntoView({behavior:"smooth"});
+}
+
+// ─── FACTS ─────────────────────────────────────────────────────────────────
+const FACTS={
+  ru:["Запах дождя создаётся химическим веществом петрикором — он образуется когда дождевая вода реагирует с маслами почвы.","Галлий плавится прямо в руке при 29.8°C — чуть выше комнатной температуры!","В одной чайной ложке воды находится около 167 триллионов триллионов молекул воды (1.67×10²³).","Гелий был обнаружен на СОЛНЦЕ раньше чем на Земле — отсюда его имя от греч. Helios.","Золото настолько инертно, что встречается в природе в чистом виде.","ДНК человека — это гигантская химическая молекула. Если её развернуть, она растянется на 2 метра!","Кофеин — органическая молекула C₈H₁₀N₄O₂. Каждый раз выпивая чай, ты пьёшь чистую органическую химию."],
+  en:["The smell of rain is created by petrichor — formed when rainwater reacts with oils in the soil.","Gallium melts right in your hand at 29.8°C — just above room temperature!","One teaspoon of water contains about 167 trillion trillion water molecules (1.67×10²³).","Helium was discovered on the SUN before Earth — hence its name from Greek Helios.","Gold is so inert it occurs in pure form in nature.","Human DNA is a giant chemical molecule. If unravelled, it would stretch 2 meters!","Caffeine is an organic molecule C₈H₁₀N₄O₂. Every time you drink tea, you're drinking pure organic chemistry."]
+};
+let fi=0;
+document.addEventListener('DOMContentLoaded',()=>{ document.getElementById('fact-txt').textContent=FACTS[currentLang][0]; });
+function nextFact(){ fi=(fi+1)%FACTS[currentLang].length; document.getElementById('fact-txt').textContent=FACTS[currentLang][fi]; }
+</script>
+</body>
+</html>

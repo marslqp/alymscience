@@ -1,0 +1,85 @@
+═══════════════════════════════════════════════════════════
+  AlymChems — ИНСТРУКЦИЯ ПО ДЕПЛОЮ НА RAILWAY.APP
+═══════════════════════════════════════════════════════════
+[# alymchems2](https://alymchems2-production.up.railway.app/index.html)
+ШАГИ (все бесплатно, ~20 минут):
+
+1. СОЗДАЙ АККАУНТ GITHUB
+   → https://github.com → Sign Up (бесплатно)
+
+2. СОЗДАЙ РЕПОЗИТОРИЙ
+   → New repository → Name: "alymchems" → Public → Create
+   → Загрузи ВСЕ файлы из этой папки кнопкой "Add file → Upload"
+
+3. ЗАРЕГИСТРИРУЙСЯ НА RAILWAY
+   → https://railway.app → Login with GitHub
+
+4. СОЗДАЙ MYSQL БАЗУ ДАННЫХ
+   → New Project → Deploy MySQL
+   → Подожди ~1 минуту пока запустится
+   → Нажми на MySQL сервис → Variables
+   → Скопируй: MYSQLHOST, MYSQLPORT, MYSQLUSER, MYSQLPASSWORD, MYSQLDATABASE
+
+5. ДОБАВЬ PHP САЙТ
+   → В том же проекте → New Service → GitHub Repo
+   → Выбери репозиторий "alymchems"
+   → В Settings → Environment Variables добавь те же переменные:
+     MYSQLHOST = (значение из MySQL сервиса)
+     MYSQLPORT = (значение)
+     MYSQLUSER = (значение)
+     MYSQLPASSWORD = (значение)
+     MYSQLDATABASE = (значение)
+
+6. НАСТРОЙ PHP (ВАЖНО!)
+   → В своём GitHub репо создай файл: nixpacks.toml
+   → Содержимое файла:
+     [phases.setup]
+     nixPkgs = ["php82", "php82Extensions.mysqli", "php82Extensions.pdo_mysql"]
+     [start]
+     cmd = "php -S 0.0.0.0:$PORT"
+
+7. ПОЛУЧИ ДОМЕН
+   → В Settings → Networking → Generate Domain
+   → Ты получишь URL типа: alymchems.up.railway.app
+
+8. СОЗДАЙ ТАБЛИЦЫ БД
+   → Открой браузер: https://alymchems.up.railway.app/setup_db.php
+   → Увидишь зелёные ✅ — значит всё готово!
+   → УДАЛИ setup_db.php из GitHub репо (в безопасности)
+
+9. ГОТОВО! Сайт работает в интернете!
+
+═══════════════════════════════════════════════════════════
+СТРУКТУРА ФАЙЛОВ (все должны быть в корне репо):
+  index.html      — главная страница
+  login.html      — вход/регистрация
+  games.html      — игры
+  tests.html      — тесты
+  quizzes.html    — квизы
+  profile.html    — профиль пользователя
+  teachers.html   — учителя
+  upcoming-events.html — события
+  db.php          — подключение к БД (не удалять!)
+  login.php       — API входа
+  signup.php      — API регистрации
+  scores_api.php  — API очков и лидерборда
+  setup_db.php    — создание таблиц (удалить после использования!)
+  nixpacks.toml   — конфигурация Railway (создать вручную)
+  img_chem.jpg    — картинка школы
+
+═══════════════════════════════════════════════════════════
+СОДЕРЖИМОЕ nixpacks.toml (создай этот файл в GitHub репо):
+
+[phases.setup]
+nixPkgs = ["php82", "php82Extensions.mysqli"]
+[start]
+cmd = "php -S 0.0.0.0:$PORT"
+
+═══════════════════════════════════════════════════════════
+ЧТО ИСПРАВЛЕНО В ЭТОЙ ВЕРСИИ:
+  ✅ Баг со счётом (score-board сбрасывается при новой сессии)
+  ✅ login.php больше не делает error=exists для входа
+  ✅ login.html использует JSON API, не PHP редиректы
+  ✅ Очки сохраняются в реальную MySQL базу данных
+  ✅ Лидерборд берёт данные с сервера
+  ✅ Профиль показывает реальный рейтинг с сервера
