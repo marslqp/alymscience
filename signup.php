@@ -59,7 +59,7 @@ $hash = password_hash($raw, PASSWORD_DEFAULT);
 
 // Вставка (с защитой от ошибок)
 //$stmt = $conn->prepare("INSERT INTO users (fullname, grade, password, role, total_score) VALUES (?, ?, ?, ?, 0)");
-$sql = "INSERT INTO users (fullname, password, role, subject) 
+$stmt = "INSERT INTO users (fullname, password, role, subject) 
         VALUES ('$fullname', '$password', 'teacher', '$subject')";
 
 $result = $conn->query($sql);
