@@ -23,8 +23,6 @@
         .stat-label { font-size: 12px; color: #64748b; }
 
         .section-title { font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .list-item { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        
         .btn { display: inline-block; padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-family: inherit; font-weight: 600; text-decoration: none; transition: 0.3s; }
         .btn-logout { background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
         .btn-logout:hover { background: #ef4444; color: white; }
@@ -62,7 +60,7 @@
         <div id="teacher-panel">
             <h2 class="section-title">📚 Ваши активные классы</h2>
             <div id="classes-list"></div>
-            <a href="create_class.html" class="btn" style="background:#2563eb; color:white; margin-top:10px; width:100%; text-align:center;">+ Создать новый класс</a>
+            <a href="teacher.html" class="btn" style="background:#2563eb; color:white; margin-top:10px; width:100%; text-align:center;">Управление классами</a>
         </div>
 
         <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
@@ -73,16 +71,19 @@
 </div>
 
 <script>
-    // Предполагаем, что данные юзера лежат в localStorage после логина
+    // Берем данные из хранилища
     const userData = JSON.parse(localStorage.getItem('user_data') || 'null');
 
+    // Если данных нет, кидаем на страницу входа (исправил на login.html)
     if (!userData) {
-        window.location.href = 'auth.html'; // Если не залогинен — на вход
+        window.location.href = 'login.html'; 
     }
 
     function initProfile() {
+        if(!userData) return;
+        
         document.getElementById('user-name').textContent = userData.fullname;
-        const role = userData.role; // 'student' или 'teacher'
+        const role = userData.role; 
         const roleTag = document.getElementById('role-tag');
         
         if (role === 'teacher') {
@@ -91,34 +92,19 @@
             document.getElementById('user-subtext').textContent = 'Преподаватель химии';
             document.getElementById('main-label').textContent = 'Предмет';
             document.getElementById('main-stat').textContent = userData.subject || 'Химия';
-            document.getElementById('secondary-label').textContent = 'Опыт';
-            document.getElementById('secondary-stat').textContent = 'Master';
+            document.getElementById('secondary-label').textContent = 'Статус';
+            document.getElementById('secondary-stat').textContent = 'PRO';
             
             document.getElementById('teacher-panel').style.display = 'block';
-            loadTeacherData();
         } else {
             roleTag.textContent = 'Ученик';
             roleTag.classList.add('student-badge');
-            document.getElementById('user-subtext').textContent = 'Ученик школы Alymbek Datka';
+            document.getElementById('user-subtext').textContent = 'Ученик Alymbek Datka';
             document.getElementById('main-stat').textContent = userData.total_score || 0;
             document.getElementById('secondary-stat').textContent = userData.grade || '—';
             
             document.getElementById('student-panel').style.display = 'block';
-            loadStudentScores();
         }
-    }
-
-    async function loadStudentScores() {
-        // Здесь должен быть запрос к API за баллами
-        const list = document.getElementById('scores-list');
-        // Заглушка, если API еще не готов
-        list.innerHTML = '<p style="color:#475569; font-size:13px;">Здесь появятся ваши оценки после прохождения тестов.</p>';
-    }
-
-    async function loadTeacherData() {
-        const list = document.getElementById('classes-list');
-        // Заглушка для классов
-        list.innerHTML = '<p style="color:#475569; font-size:13px;">У вас пока нет созданных классов.</p>';
     }
 
     function logout() {
