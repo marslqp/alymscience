@@ -58,8 +58,24 @@ $chk->close();
 $hash = password_hash($raw, PASSWORD_DEFAULT);
 
 // Вставка (с защитой от ошибок)
-$stmt = $conn->prepare("INSERT INTO users (fullname, grade, password, role, total_score) VALUES (?, ?, ?, ?, 0)");
+//$stmt = $conn->prepare("INSERT INTO users (fullname, grade, password, role, total_score) VALUES (?, ?, ?, ?, 0)");
+$sql = "INSERT INTO users (fullname, password, role, subject) 
+        VALUES ('$fullname', '$password', 'teacher', '$subject')";
 
+$result = $conn->query($sql);
+
+if (!$result) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "MySQL Error: " . $conn->error
+    ]);
+    exit;
+}
+
+echo json_encode([
+    "status" => "success",
+    "message" => "Teacher registered successfully"
+]);
 if (!$stmt) {
     echo json_encode(['error' => 'sql_prepare_error', 'detail' => $conn->error]);
     exit;
