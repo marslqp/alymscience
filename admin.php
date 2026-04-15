@@ -7,7 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type, X-Admin-Token');
 require_once 'db.php';
 
 $token = $_SERVER['HTTP_X_ADMIN_TOKEN'] ?? $_GET['token'] ?? '';
-$valid_token = getenv('ADMIN_TOKEN') ?: 'admin_secret_2026';
+$valid_token = getenv('ADMIN_TOKEN') ?: '11082010';
 
 if ($token !== $valid_token) {
     http_response_code(403);
