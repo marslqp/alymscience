@@ -71,63 +71,61 @@
 </div>
 
 <script>
-    // 1. Проверяем данные. Пробуем разные варианты ключей, если ты их менял
-    let rawData = localStorage.getItem('user_data') || localStorage.getItem('user');
-    let userData = null;
-
-    try {
-        userData = JSON.parse(rawData);
-    } catch (e) {
-        console.error("Ошибка парсинга данных пользователя");
-    }
-
-    // 2. Если данных СОВСЕМ нет — только тогда на логин
-    if (!userData || !userData.fullname) {
-        console.log("Пользователь не найден, перенаправляем...");
-        // Если хочешь потестить без вылетов, временно закомментируй строку ниже:
-        window.location.href = 'login.html'; 
-    }
-
     function initProfile() {
-        if (!userData) return;
+        // Ищем именно тот ключ, который у тебя в консоли — currentUser
+        const rawData = localStorage.getItem('currentUser');
+        let userData = null;
 
-        // Заполняем имя
-        document.getElementById('user-name').textContent = userData.fullname || "Пользователь";
-        
-        const role = userData.role || 'student'; 
+        try {
+            userData = JSON.parse(rawData);
+        } catch (e) {
+            console.error("Ошибка чтения currentUser");
+        }
+
+        const nameH1 = document.getElementById('user-name');
+        const subtext = document.getElementById('user-subtext');
         const roleTag = document.getElementById('role-tag');
+
+        if (!userData) {
+            console.log("Данные currentUser не найдены");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // Заполняем данные, используя ТВОИ ключи (name вместо fullname)
+        nameH1.textContent = userData.name || "Пользователь";
         
-        // Логика для Учителя
+        // Проверяем роль (если в данных есть role, иначе по умолчанию student)
+        const role = userData.role || 'student';
+
         if (role === 'teacher') {
             roleTag.textContent = 'Учитель';
             roleTag.className = 'role-badge teacher-badge';
-            document.getElementById('user-subtext').textContent = 'Преподаватель лицей Алымбек Датка';
+            subtext.textContent = 'Преподаватель лицей Алымбек Датка';
             document.getElementById('main-label').textContent = 'Предмет';
             document.getElementById('main-stat').textContent = userData.subject || 'Химия';
             document.getElementById('secondary-label').textContent = 'Статус';
             document.getElementById('secondary-stat').textContent = 'PRO';
-            
             document.getElementById('teacher-panel').style.display = 'block';
-        } 
-        // Логика для Ученика
-        else {
+        } else {
             roleTag.textContent = 'Ученик';
             roleTag.className = 'role-badge student-badge';
-            document.getElementById('user-subtext').textContent = 'Ученик лицей Алымбек Датка';
-            document.getElementById('main-stat').textContent = userData.total_score || 0;
-            document.getElementById('secondary-stat').textContent = userData.grade || '9';
-            
+            subtext.textContent = 'Ученик лицей Алымбек Датка';
+            // Используем userData.score или 0, и userData.grade
+            document.getElementById('main-stat').textContent = userData.score || 0;
+            document.getElementById('secondary-stat').textContent = userData.grade || '9А';
             document.getElementById('student-panel').style.display = 'block';
         }
     }
 
     function logout() {
-        localStorage.clear(); // Очищаем всё
-        window.location.href = 'index.html';
+        // Очищаем именно currentUser
+        localStorage.removeItem('currentUser');
+        window.location.href = 'login.html';
     }
 
-    // Запускаем
     document.addEventListener('DOMContentLoaded', initProfile);
 </script>
+    
 </body>
 </html>
