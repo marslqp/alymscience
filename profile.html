@@ -82,64 +82,59 @@
 </div>
 
 <script>
-    function initProfile() {
-        // Ищем именно тот ключ, который у тебя в консоли — currentUser
-        const rawData = localStorage.getItem('currentUser');
-        let userData = null;
+function initProfile() {
+    const rawData = localStorage.getItem('currentUser');
+    let userData = null;
 
-        try {
-            userData = JSON.parse(rawData);
-        } catch (e) {
-            console.error("Ошибка чтения currentUser");
-        }
-
-        const nameH1 = document.getElementById('user-name');
-        const subtext = document.getElementById('user-subtext');
-        const roleTag = document.getElementById('role-tag');
-
-        if (!userData) {
-            console.log("Данные currentUser не найдены");
-            window.location.href = 'login.html';
-            return;
-        }
-
-        // Заполняем данные, используя ТВОИ ключи (name вместо fullname)
-        nameH1.textContent = userData.name || "Пользователь";
-        
-        // Проверяем роль (если в данных есть role, иначе по умолчанию student)
-        const role = userData.role || 'student';
-
-        if (role === 'teacher') {
-            roleTag.textContent = 'Учитель';
-            roleTag.className = 'role-badge teacher-badge';
-            subtext.textContent = 'Преподаватель лицей Алымбек Датка';
-            document.getElementById('main-label').textContent = 'Предмет';
-            document.getElementById('main-stat').textContent = userData.subject || 'Химия';
-            document.getElementById('secondary-label').textContent = 'Статус';
-            document.getElementById('secondary-stat').textContent = 'PRO';
-            document.getElementById('teacher-panel').style.display = 'block';
-        } else {
-            roleTag.textContent = 'Ученик';
-            roleTag.className = 'role-badge student-badge';
-            subtext.textContent = 'Ученик лицей Алымбек Датка';
-
-            document.getElementById('main-stat').textContent = userData.score || 0;
-
-    // 🔥 ВАЖНО
-    loadMyClasses();
-
-    document.getElementById('student-panel').style.display = 'block';
-        }
+    try {
+        userData = JSON.parse(rawData);
+    } catch (e) {
+        console.error("Ошибка чтения currentUser");
     }
 
-    function logout() {
-        // Очищаем именно currentUser
-        localStorage.removeItem('currentUser');
+    const nameH1 = document.getElementById('user-name');
+    const subtext = document.getElementById('user-subtext');
+    const roleTag = document.getElementById('role-tag');
+
+    if (!userData) {
         window.location.href = 'login.html';
+        return;
     }
 
-    document.addEventListener('DOMContentLoaded', initProfile);
-    async function joinClass() {
+    nameH1.textContent = userData.name || "Пользователь";
+    const role = userData.role || 'student';
+
+    if (role === 'teacher') {
+        roleTag.textContent = 'Учитель';
+        roleTag.className = 'role-badge teacher-badge';
+        subtext.textContent = 'Преподаватель лицей Алымбек Датка';
+
+        document.getElementById('main-label').textContent = 'Предмет';
+        document.getElementById('main-stat').textContent = userData.subject || 'Химия';
+
+        document.getElementById('secondary-label').textContent = 'Статус';
+        document.getElementById('secondary-stat').textContent = 'PRO';
+
+        document.getElementById('teacher-panel').style.display = 'block';
+    } else {
+        roleTag.textContent = 'Ученик';
+        roleTag.className = 'role-badge student-badge';
+        subtext.textContent = 'Ученик лицей Алымбек Датка';
+
+        document.getElementById('main-stat').textContent = userData.score || 0;
+        document.getElementById('secondary-label').textContent = 'Класс';
+
+        loadMyClasses();
+        document.getElementById('student-panel').style.display = 'block';
+    }
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+}
+
+async function joinClass() {
     const code = document.getElementById('invite-code').value.trim().toUpperCase();
     const msg = document.getElementById('join-msg');
 
@@ -164,32 +159,52 @@
 
     if (data.success) {
         msg.innerText = "✅ Ты вступил в класс: " + data.class_name;
+
+        // сохраняем класс
+        user.className = data.class_name;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        // сразу показываем
+        document.getElementById('secondary-stat').textContent = data.class_name;
+
     } else {
         msg.innerText = "❌ " + data.error;
     }
 }
-    async function loadMyClasses() {
+
+async function loadMyClasses() {
     const user = JSON.parse(localStorage.getItem('currentUser'));
 
-    const res = await fetch('teacher_api.php?action=my_student_classes', {
-        headers: {
-            'X-User-Id': user.id,
-            'X-User-Role': user.role
+    try {
+        const res = await fetch('teacher_api.php?action=my_student_classes', {
+            headers: {
+                'X-User-Id': user.id,
+                'X-User-Role': user.role
+            }
+        });
+
+        const data = await res.json();
+
+        if (!data.classes || data.classes.length === 0) {
+            document.getElementById('secondary-stat').textContent =
+                user.className || "Нет";
+            return;
         }
-    });
 
-    const data = await res.json();
+        const classNames = data.classes.map(c => c.class_name).join(', ');
 
-    if (!data.classes || data.classes.length === 0) {
-        document.getElementById('secondary-stat').textContent = "Нет";
-        return;
+        user.className = classNames;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        document.getElementById('secondary-stat').textContent = classNames;
+
+    } catch (e) {
+        document.getElementById('secondary-stat').textContent =
+            user.className || "Ошибка";
     }
-
-    // показываем первый класс (или можно все)
-    const classNames = data.classes.map(c => c.class_name).join(', ');
-
-    document.getElementById('secondary-stat').textContent = classNames;
 }
+
+document.addEventListener('DOMContentLoaded', initProfile);
 </script>
     
 </body>
