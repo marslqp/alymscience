@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Получаем данные
+// Получаем JSON
 $input = json_decode(file_get_contents('php://input'), true);
 
 $name  = trim($input['fullname'] ?? '');
@@ -20,6 +20,7 @@ $grade = trim($input['grade'] ?? '');
 $raw   = $input['password'] ?? '';
 $role  = $input['role'] ?? 'student';
 $teacher_code = $input['teacher_code'] ?? '';
+$subject = $input['subject'] ?? null;
 
 // Проверки
 if (!$name || !$raw || !$grade) {
@@ -32,7 +33,7 @@ if (strlen($raw) < 6) {
     exit;
 }
 
-// ✅ ПРОСТАЯ И НАДЁЖНАЯ ПРОВЕРКА КОДА УЧИТЕЛЯ (без БД)
+// Проверка кода учителя
 if ($role === 'teacher') {
     $correct_code = getenv('TEACHER_CODE') ?: 'Chem2026!';
 
@@ -42,7 +43,7 @@ if ($role === 'teacher') {
     }
 }
 
-// Проверка имени
+// Проверка на существующее имя
 $chk = $conn->prepare("SELECT id FROM users WHERE LOWER(fullname)=LOWER(?)");
 $chk->bind_param('s', $name);
 $chk->execute();
@@ -57,31 +58,21 @@ $chk->close();
 // Хешируем пароль
 $hash = password_hash($raw, PASSWORD_DEFAULT);
 
-// Вставка (с защитой от ошибок)
-//$stmt = $conn->prepare("INSERT INTO users (fullname, grade, password, role, total_score) VALUES (?, ?, ?, ?, 0)");
-$stmt = "INSERT INTO users (fullname, password, role, subject) 
-        VALUES ('$fullname', '$password', 'teacher', '$subject')";
+// Вставка
+$stmt = $conn->prepare("
+    INSERT INTO users (fullname, grade, password, total_score, role, subject) 
+    VALUES (?, ?, ?, 0, ?, ?)
+");
 
-$result = $conn->query($sql);
-
-if (!$result) {
+if (!$stmt) {
     echo json_encode([
-        "status" => "error",
-        "message" => "MySQL Error: " . $conn->error
+        'error' => 'sql_prepare_error',
+        'detail' => $conn->error
     ]);
     exit;
 }
 
-echo json_encode([
-    "status" => "success",
-    "message" => "Teacher registered successfully"
-]);
-if (!$stmt) {
-    echo json_encode(['error' => 'sql_prepare_error', 'detail' => $conn->error]);
-    exit;
-}
-
-$stmt->bind_param('ssss', $name, $grade, $hash, $role);
+$stmt->bind_param('sssss', $name, $grade, $hash, $role, $subject);
 
 if ($stmt->execute()) {
     echo json_encode([
