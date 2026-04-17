@@ -90,9 +90,47 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:14px 5
 .period-section{background:rgba(255,255,255,0.02);border-radius:24px;padding:32px;border:1px solid rgba(255,255,255,0.06);}
 footer{text-align:center;padding:30px;background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.05);}
 @media(max-width:800px){.info{grid-template-columns:1fr;}nav{padding:14px 20px;}.nav-links{gap:8px;}.hero h1{font-size:34px;}.big-label{font-size:44px;letter-spacing:6px;}.hide-sm{display:none!important;}}
-.img1 { left: 10%; top: 20%; }
-.img2 { left: 50%; top: 10%; }
-.img3 { left: 80%; top: 30%; }
+/* container must be relative */
+.floating-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* base style for all images */
+.floating-img {
+  position: absolute;
+  width: 80px; /* change size if needed */
+  opacity: 0.85;
+  animation: float 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px #38bdf8);
+}
+
+/* different positions + timing */
+.img1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.img2 {
+  top: 10%;
+  left: 50%;
+  animation-delay: 2s;
+}
+
+.img3 {
+  top: 30%;
+  left: 80%;
+  animation-delay: 4s;
+}
+
+/* floating animation */
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-25px); }
+  100% { transform: translateY(0px); }
+}
 </style>
 </head>
 <body>
@@ -122,9 +160,11 @@ footer{text-align:center;padding:30px;background:rgba(255,255,255,0.03);border-t
     <a href="#features" class="btn" id="hero-btn1">🚀 Начать учиться</a>
     <a href="login.html" class="btn btn-ghost" id="hero-signup-btn" id="hero-btn2">Создать аккаунт</a>
   </div>
-<img src="image3.png" class="floating-img img1">
-<img src="image4.png" class="floating-img img2">
-<img src="image5.png" class="floating-img img3">
+<div class="floating-container">
+  <img src="image1.png" class="floating-img img1">
+  <img src="image2.png" class="floating-img img2">
+  <img src="image3.png" class="floating-img img3">
+</div>
 </section>
 
 <section class="section" style="padding-top:20px;">
